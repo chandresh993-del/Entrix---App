@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="app-version" content="v2.0525.1754">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a1f4e">
+<title>ENTRIX – Quotation App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--navy:#0a1f4e;--blue:#1a3a7c;--gold:#e8a020;--gold2:#f5c518;--green:#1a6b3a;--wa:#25d366;--red:#c04040;--purple:#6a0dad;--bg:#f0f4fa;--bd:#dce5f5}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a2540;font-size:15px;min-height:100vh}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(150deg,#061228 0%,#0d2550 50%,#1a3a7c 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:24px}
+.login-logo{width:72px;height:72px;background:var(--gold);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;color:var(--navy);margin-bottom:10px;box-shadow:0 8px 32px rgba(232,160,32,.4)}
+.login-title{color:#fff;font-size:24px;font-weight:800;letter-spacing:1.5px}
+.login-sub{color:#7aa4e8;font-size:11px;letter-spacing:2px;margin-bottom:30px;text-transform:uppercase}
+.role-cards{display:flex;gap:14px;margin-bottom:22px;width:100%;max-width:360px}
+.role-card{flex:1;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.15);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.role-card.selected{background:rgba(232,160,32,.18);border-color:var(--gold)}
+.role-icon{font-size:30px;margin-bottom:7px}
+.role-name{color:#fff;font-weight:700;font-size:15px}
+.role-desc{color:#7aa4e8;font-size:11px;margin-top:3px}
+.login-box{width:100%;max-width:360px}
+.login-box input{width:100%;padding:13px 16px;border:2px solid rgba(255,255,255,.15);border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:15px;outline:none;margin-bottom:12px;font-family:inherit}
+.login-box input:focus{border-color:var(--gold)}
+.login-box input::placeholder{color:rgba(255,255,255,.4)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,#e8a020,#c47a10);color:var(--navy);border:none;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:.5px}
+.login-err{color:#ff8080;font-size:12px;text-align:center;margin-top:8px;min-height:18px}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#0a1f4e,#1a3a7c);padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100}
+.hdr-logo{width:38px;height:38px;min-width:38px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:var(--navy)}
+.hdr-name{color:#fff;font-weight:800;font-size:15px;line-height:1.2}
+.hdr-sub{color:#8eb4ff;font-size:10px;letter-spacing:1px}
+.role-pill{margin-left:auto;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.pill-admin{background:rgba(232,160,32,.2);border:1px solid var(--gold);color:var(--gold)}
+.pill-user{background:rgba(29,184,122,.2);border:1px solid #1db87a;color:#1db87a}
+.exit-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;margin-left:6px}
+
+/* ── TABS ── */
+.tabs{background:#fff;border-bottom:1px solid var(--bd);display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:none;border-bottom:3px solid transparent;padding:11px 13px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:#7a8fb0;white-space:nowrap;transition:all .15s}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:700px;margin:0 auto;padding:12px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:12px}
+.ct{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid var(--gold)}
+label{display:block;font-size:11px;font-weight:700;color:#5a6a8a;letter-spacing:.7px;text-transform:uppercase;margin-bottom:4px;margin-top:10px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #d0d9ee;border-radius:7px;font-size:14px;color:#1a2540;background:#fff;outline:none;-webkit-appearance:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+textarea{resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ifl{display:flex;gap:6px;align-items:center}
+
+/* ── MARGIN BANNER ── */
+.mb{background:linear-gradient(135deg,#fff8e0,#fff3c0);border:2px solid var(--gold);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.mb-title{font-weight:800;color:#8a5a00;font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mb-row{display:flex;align-items:center;gap:10px}
+.mb-row input[type=range]{flex:1;accent-color:var(--gold)}
+.mb-num{width:58px;padding:6px 8px;border:2px solid var(--gold);border-radius:6px;font-weight:800;font-size:14px;text-align:center;color:#8a5a00}
+
+/* ── ITEM CARD ── */
+.item-card{background:#f7f9ff;border:1.5px solid var(--bd);border-radius:10px;padding:13px;margin-bottom:10px;position:relative}
+.item-badge{position:absolute;top:11px;right:11px;background:var(--blue);color:#fff;border-radius:5px;padding:2px 9px;font-size:11px;font-weight:700}
+.custom-card{background:#faf5ff;border:1.5px solid #c084fc}
+/* price master picker */
+.pm-picker{background:#1a3a7c;border-radius:9px;padding:12px 13px;margin-bottom:10px}
+.pm-picker-title{color:#e8a020;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+/* searchable dropdown */
+.pm-search-wrap{position:relative}
+.pm-search-input{width:100%;padding:10px 36px 10px 12px;border:2px solid #e8a020;border-radius:7px;background:#0a1f4e;color:#fff;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box}
+.pm-search-input::placeholder{color:rgba(255,255,255,.45)}
+.pm-search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#e8a020;font-size:18px;cursor:pointer;padding:0;line-height:1}
+.pm-dropdown{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#0d2550;border:2px solid #e8a020;border-radius:8px;max-height:260px;overflow-y:auto;z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,.5)}
+.pm-dropdown::-webkit-scrollbar{width:5px}
+.pm-dropdown::-webkit-scrollbar-thumb{background:#e8a020;border-radius:3px}
+.pm-cat-header{padding:5px 12px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#e8a020;background:#061228;position:sticky;top:0}
+.pm-option{padding:10px 14px;font-size:13px;color:#fff;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06);transition:background .1s}
+.pm-option:hover,.pm-option.active{background:rgba(232,160,32,.2)}
+.pm-option-name{font-weight:600;line-height:1.3}
+.pm-no-result{padding:16px;text-align:center;color:rgba(255,255,255,.4);font-size:13px}
+.pm-optgroup-hdr{background:#0a1f4e;color:#e8a020;font-weight:700}
+/* discount box */
+.disc-box{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1.5px solid #34d399;border-radius:9px;padding:10px 12px;margin:8px 0}
+.disc-title{font-size:11px;font-weight:800;color:#065f46;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.disc-row{display:flex;align-items:center;gap:10px}
+.disc-row input[type=range]{flex:1;accent-color:#34d399}
+.disc-input{width:58px;padding:6px 8px;border:2px solid #34d399;border-radius:6px;font-weight:800;font-size:14px;text-align:center;color:#065f46}
+.price-breakdown{background:#fff;border:1px solid #d1fae5;border-radius:8px;padding:9px 12px;font-size:12px;margin-top:6px}
+.pb-row{display:flex;justify-content:space-between;padding:2px 0;color:#4b5563}
+.pb-row.strike{color:#9ca3af;text-decoration:line-through}
+.pb-row.final{font-weight:800;font-size:14px;color:#065f46;border-top:1.5px solid #34d399;margin-top:5px;padding-top:5px}
+
+/* ── QTY BANNER ── */
+.qty-box{background:linear-gradient(135deg,#0d2550,#1a3a7c);border-radius:9px;padding:11px 14px;margin:10px 0;display:flex;align-items:center;gap:12px}
+.qty-label{color:#8eb4ff;font-size:11px;font-weight:700;letter-spacing:1px;margin:0}
+.qty-input{background:rgba(255,255,255,.15);border:2px solid var(--gold);border-radius:8px;color:#fff;font-size:22px;font-weight:900;text-align:center;width:76px;padding:7px 4px}
+.qty-hint{color:#8eb4ff;font-size:11px;flex:1;line-height:1.4}
+
+/* ── SOLAR FIELDS ── */
+.solar-box{background:#ecfdf5;border:1.5px solid #34d399;border-radius:9px;padding:11px 12px;margin:8px 0}
+.solar-box-title{font-size:11px;font-weight:800;color:#065f46;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.solar-box label{color:#065f46}
+.solar-box select{border-color:#34d399}
+
+/* ── NA BOX ── */
+.na-box{background:#f5f5f5;border:1.5px dashed #ccc;border-radius:9px;padding:10px 14px;margin:8px 0;font-size:12px;color:#aaa;text-align:center}
+
+/* ── COMPONENT TOGGLES ── */
+.comp-section{margin:8px 0}
+.comp-section-title{font-size:11px;font-weight:700;color:#1a3a7c;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.ctog{display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;cursor:pointer;user-select:none;transition:all .15s;font-size:13px;font-weight:600;border:1.5px solid}
+.ctog.on{background:#ecfdf5;border-color:#34d399;color:#065f46}
+.ctog.off{background:#fff5f5;border-color:#fca5a5;color:#991b1b;opacity:.75}
+.ctog .ck{font-size:17px;line-height:1}
+
+/* ── COMP DETAIL ── */
+.comp-detail{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:9px 11px;margin-bottom:7px}
+.comp-detail label{margin-top:0;color:#1a3a7c}
+
+/* ── SPEC BOX ── */
+.spec-box{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;border-radius:8px;padding:9px 12px;margin-top:5px;font-size:11px;color:#1e40af;line-height:1.7}
+.spec-title{font-weight:800;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#1e3a8a;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+
+/* ── PRICE TAGS ── */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{padding:4px 9px;border-radius:7px;font-size:11px;font-weight:700}
+.tag-cost{background:#dbeafe;color:#1e40af}
+.tag-unit{background:#fef3c7;color:#92400e}
+.tag-gst{background:#d1fae5;color:#065f46}
+.tag-total{background:#dcfce7;color:#14532d}
+
+/* ── TOTALS ── */
+.totals-box{background:linear-gradient(135deg,#f0f7ff,#e8f0ff);border:1px solid #93c5fd;border-radius:9px;padding:14px;margin-top:10px}
+.tot-row{display:flex;justify-content:space-between;padding:3px 0;font-size:13px;color:#4b5563}
+.tot-grand{display:flex;justify-content:space-between;border-top:2px solid var(--gold);margin-top:8px;padding-top:8px;font-weight:900;font-size:20px;color:var(--blue)}
+.tot-words{font-size:11px;color:#6b7280;font-style:italic;margin-top:4px}
+
+/* ── BUTTONS ── */
+.btn{border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn-navy{background:var(--blue);color:#fff}
+.btn-gold{background:linear-gradient(135deg,#e8a020,#c47a10);color:var(--navy)}
+.btn-green{background:linear-gradient(135deg,#15803d,#166534);color:#fff}
+.btn-wa{background:linear-gradient(135deg,#25d366,#16a34a);color:#fff}
+.btn-pdf{background:linear-gradient(135deg,#1e40af,#1e3a8a);color:#fff}
+.btn-purple{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff}
+.btn-danger{background:rgba(220,38,38,.1);color:#dc2626;border:1px solid #fca5a5}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-full{width:100%}
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+
+/* ── PRICE TABLE ── */
+.price-section{margin-bottom:16px;border-radius:10px;overflow:hidden;box-shadow:0 1px 5px rgba(0,0,0,.07)}
+.cat-hdr{padding:9px 14px;color:#fff;font-weight:800;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.ptbl{width:100%;border-collapse:collapse;font-size:13px}
+.ptbl th{background:var(--blue);color:#fff;padding:7px 9px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+.ptbl td{padding:8px 9px;border-bottom:1px solid #eef0f8;vertical-align:middle}
+.ptbl tr:nth-child(even) td{background:#f7f9ff}
+.add-form{background:#fffce8;padding:10px 12px;display:flex;flex-direction:column;gap:7px;border-bottom:2px dashed var(--gold)}
+
+/* ── ADMIN PRODUCT CARDS ── */
+.prod-cards{display:grid;grid-template-columns:1fr;gap:10px;padding:12px}
+.prod-card{background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06);transition:box-shadow .15s}
+.prod-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.1)}
+.prod-card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 13px 8px;border-bottom:1px solid var(--bd);gap:8px}
+.prod-card-name{font-weight:700;font-size:14px;color:#1a2540;flex:1;line-height:1.3}
+.prod-card-price{font-weight:800;font-size:15px;white-space:nowrap;padding:3px 10px;border-radius:7px;background:#fef3c7;color:#92400e}
+.prod-card-desc{padding:8px 13px;font-size:12px;color:#4b5563;line-height:1.65;background:#fafbff}
+.prod-card-footer{padding:8px 13px;display:flex;gap:7px;border-top:1px solid var(--bd);background:#f8faff}
+.prod-card-num{position:absolute;top:11px;left:-1px;background:var(--blue);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:0 5px 5px 0}
+/* Add form card */
+.add-card{background:linear-gradient(135deg,#fffce8,#fff8d0);border:2px dashed var(--gold);border-radius:10px;padding:14px;margin:0 12px 12px}
+.add-card-title{font-weight:800;color:#8a5a00;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.field-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.field-row .f{display:flex;flex-direction:column;gap:4px}
+.field-row .f label{margin:0;font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px}
+.field-row .f-name{flex:3;min-width:160px}
+.field-row .f-rate{flex:1;min-width:90px}
+.field-row .f-unit{flex:1;min-width:80px}
+.field-row .f-maxw{flex:1;min-width:70px}
+.prod-view-row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-bottom:6px}
+
+/* ── HISTORY ── */
+.hist-item{background:#fff;border:1px solid var(--bd);border-radius:9px;padding:12px;margin-bottom:10px;display:flex;align-items:flex-start;gap:10px}
+
+/* ── PREVIEW / PRINT ── */
+#quote-doc{padding:14px;font-family:Arial,sans-serif;font-size:12px;color:#000}
+.doc-hdr{border-bottom:3px solid #0a1f4e;padding-bottom:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.doc-co{font-size:19px;font-weight:900;color:#0a1f4e;letter-spacing:.5px}
+.doc-addr{font-size:10px;color:#555;line-height:1.55;margin-top:3px}
+.doc-badge{background:#e8a020;color:#0a1f4e;font-weight:900;font-size:13px;padding:3px 12px;border-radius:4px;display:inline-block;margin-bottom:3px}
+.client-box{background:#f7f9ff;border:1px solid #dce5f5;padding:8px 10px;border-radius:6px;margin-bottom:10px;font-size:12px}
+.itbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px}
+.itbl th{background:#0a1f4e;color:#fff;padding:5px 6px;text-align:left;white-space:nowrap}
+.itbl td{padding:5px 6px;border-bottom:1px solid #e0e8f5;vertical-align:top}
+.itbl tr:nth-child(even) td{background:#f9fbff}
+.totdoc{float:right;width:265px;font-size:12px}
+.totdoc-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #ddd}
+.totdoc-grand{display:flex;justify-content:space-between;padding:5px 0;font-weight:900;font-size:14px;color:#0a1f4e;border-top:2px solid #e8a020;margin-top:3px}
+.clearfix{clear:both}
+.terms-box{background:#f7f9ff;border:1px solid #dce5f5;padding:8px 10px;border-radius:5px;font-size:10px;margin-bottom:8px;line-height:1.7}
+.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:10px;margin-bottom:8px}
+.footer-bar{background:#0a1f4e;color:#e8a020;font-size:10px;font-weight:700;text-align:center;padding:7px;border-radius:5px}
+
+/* ── SETTINGS ── */
+.set-section{background:#fffce8;border:2px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:12px}
+/* Export section */
+.export-section{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:2px solid #34d399;border-radius:12px;padding:16px;margin-bottom:14px}
+.import-section{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #3b82f6;border-radius:12px;padding:16px;margin-bottom:14px}
+.import-title{font-weight:800;color:#1e3a8a;font-size:15px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.data-code-box{background:#0a1f4e;color:#34d399;font-family:monospace;font-size:11px;padding:10px 12px;border-radius:8px;word-break:break-all;line-height:1.6;margin:10px 0;max-height:100px;overflow-y:auto;user-select:all;-webkit-user-select:all}
+.wa-share-btn{background:linear-gradient(135deg,#25d366,#16a34a);color:#fff;border:none;border-radius:9px;padding:13px;font-weight:800;font-size:15px;width:100%;cursor:pointer;font-family:inherit;margin-top:8px}
+.import-textarea{width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-family:monospace;font-size:12px;min-height:80px;resize:vertical;background:#f0f7ff;color:#1e3a8a;box-sizing:border-box}
+.export-title{font-weight:800;color:#065f46;font-size:15px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.export-desc{font-size:12px;color:#047857;line-height:1.7;margin-bottom:12px}
+.export-step{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:13px;color:#064e3b}
+.export-step-num{background:#34d399;color:#065f46;font-weight:900;border-radius:50%;width:22px;height:22px;min-width:22px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.set-title{font-weight:800;color:#8a5a00;font-size:14px;margin-bottom:10px}
+
+/* ── MISC ── */
+.msg{font-size:12px;font-weight:700;padding:7px 12px;border-radius:7px;text-align:center;margin-top:6px}
+.msg-ok{background:#dcfce7;color:#14532d}
+.msg-err{background:#fee2e2;color:#991b1b}
+.msg-info{background:#dbeafe;color:#1e40af}
+.empty{text-align:center;color:#9ca3af;padding:30px;font-size:13px}
+.empty i{font-size:36px;display:block;margin-bottom:8px}
+.srchbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.srchbar input,.srchbar select{flex:1;min-width:140px}
+.custom-badge{position:absolute;top:11px;right:11px;background:var(--purple);color:#fff;border-radius:5px;padding:2px 9px;font-size:11px;font-weight:700}
+
+/* Custom confirm modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99990;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#fff;border-radius:14px;padding:24px;max-width:340px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.modal-title{font-size:17px;font-weight:800;color:#1a2540;margin-bottom:8px}
+.modal-msg{font-size:14px;color:#4b5563;margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px}
+.modal-btns button{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.modal-cancel{background:#f3f4f6;color:#374151}
+.modal-confirm{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff}
+/* Add Category */
+.add-cat-form{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px dashed #4ade80;border-radius:10px;padding:14px;margin:0 0 14px}
+.add-cat-title{font-weight:800;color:#15803d;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* Update notice */
+.update-notice{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:9998;font-weight:700;font-size:13px;box-shadow:0 -3px 12px rgba(0,0,0,.2)}
+.update-notice button{background:#0a1f4e;color:#e8a020;border:none;border-radius:6px;padding:6px 14px;font-weight:800;cursor:pointer;font-size:12px}
+
+/* WA PDF status overlay */
+.wa-overlay{position:fixed;inset:0;background:rgba(10,31,78,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;padding:24px}
+.wa-spinner{width:56px;height:56px;border:5px solid rgba(255,255,255,.2);border-top-color:#25d366;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}
+.wa-status-title{color:#fff;font-size:18px;font-weight:800;margin-bottom:8px;text-align:center}
+.wa-status-sub{color:#8eb4ff;font-size:13px;text-align:center;line-height:1.6}
+.wa-progress{width:220px;height:6px;background:rgba(255,255,255,.15);border-radius:3px;margin-top:14px;overflow:hidden}
+.wa-progress-bar{height:100%;background:linear-gradient(90deg,#25d366,#16a34a);border-radius:3px;width:0%;transition:width .3s}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media print{
+  #loginScreen,#noprint,.hdr,.tabs,button{display:none!important}
+  body{background:#fff}
+  .preview-wrap{box-shadow:none;border:none}
+  @page{margin:10mm;size:A4}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="login-logo">E</div>
+  <div class="login-title">ENTRIX INNOVATION</div>
+  <div class="login-sub">Solar · High Mast · Fabrication</div>
+  <div class="role-cards">
+    <div class="role-card selected" id="rc-admin" onclick="pickRole('admin')">
+      <div class="role-icon">🔐</div>
+      <div class="role-name">Admin</div>
+      <div class="role-desc">Full access + Prices</div>
+    </div>
+    <div class="role-card" id="rc-user" onclick="pickRole('user')">
+      <div class="role-icon">👤</div>
+      <div class="role-name">User</div>
+      <div class="role-desc">Build Quotations</div>
+    </div>
+  </div>
+  <div class="login-box">
+    <div id="pin-div">
+      <input type="password" id="loginPin" placeholder="Enter Admin Password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">▶ Enter App</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="mainApp" style="display:none">
+  <div class="hdr">
+    <div class="hdr-logo">E</div>
+    <div><div class="hdr-name">ENTRIX INNOVATION</div><div class="hdr-sub">QUOTATION APP &nbsp;·&nbsp; <span id="appVerDisplay" style="color:#e8a020;font-weight:700">v2.0525.1754</span></div></div>
+    <div class="role-pill" id="rolePill"></div>
+    <button class="exit-btn" onclick="logout()">⏻ Exit</button>
+  </div>
+  <div class="tabs" id="tabBar"></div>
+  <div class="wrap">
+    <div id="tab-quote" style="display:none"></div>
+    <div id="tab-prices" style="display:none"></div>
+    <div id="tab-history" style="display:none"></div>
+    <div id="tab-preview" style="display:none"></div>
+    <div id="tab-settings" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// PRODUCT SPECS — auto-fill descriptions per item
+// ═══════════════════════════════════════════════════
+const SPECS = {
+  bodies:{
+    "SL_Lens_30W":"Solar Street Light Body / Lense Type Cover / Max 30W LED / Die Cast Aluminium Housing / IP65 Rating / Powder Coated Finish / High Transmittance PC Lens",
+    "SL_Glass_30W":"Solar Street Light Body / Toughened Glass Cover / Max 30W LED / Die Cast Aluminium Housing / IP65 Rating / Powder Coated Finish / Anti-UV Coating",
+    "SL_Frame_80W":"Solar Street Light Body / Open Frame Type / Max 80W LED / Die Cast Aluminium Housing / IP65 Rating / Powder Coated / Wide Beam Angle",
+    "FL_50W":"Flood Light / Down Choke Type / 50W LED / Die Cast Aluminium / IP65 Rating / Powder Coated / Wide Angle Beam 120°",
+    "FL_100W":"Flood Light / Down Choke Type / 100W LED / Die Cast Aluminium / IP65 Rating / Powder Coated / High Lumen Output",
+    "FL_150W":"Flood Light / Down Choke Type / 150W LED / Die Cast Aluminium / IP65 Rating / Powder Coated / Heavy Duty High Mast Use",
+  },
+  batteries:{
+    "9A_3.7V":"Lithium Ion Battery / 9Ah @ 3.7V / Grade A Cell / Built-in BMS Protection / Operating Temp: -20°C to 60°C / Long Cycle Life",
+    "24A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 24Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / Operating Temp: -20°C to 60°C / IP65 Box / Maintenance Free",
+    "48A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 48Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / Operating Temp: -20°C to 60°C / IP65 Box / Maintenance Free",
+    "72A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 72Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / Operating Temp: -20°C to 60°C / IP65 Box / Maintenance Free",
+    "96A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 96Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / Operating Temp: -20°C to 60°C / IP65 Enclosure / Deep Discharge Protection",
+    "120A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 120Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure / Overcharge & Deep Discharge Protection",
+    "144A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 144Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure / High Capacity for 3 Cloudy Days Backup",
+    "168A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 168Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "192A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 192Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "216A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 216Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "240A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 240Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "288A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 288Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "320A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 320Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "384A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 384Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure",
+    "432A_3.2V":"Lithium Iron Phosphate Battery (LiFePO4) / 432Ah @ 3.2V / Grade A Cell / 2000+ Cycle Life / BMS Protected / IP65 Enclosure / Maximum Backup Capacity",
+    "7.2A_SMF":"Sealed Maintenance Free Battery / 7.2Ah @ 12V / VRLA Technology / Leak Proof / Auto Shut-off / Long Shelf Life",
+    "20A_Tub":"Tubular Battery / 20Ah / Deep Cycle Design / Low Maintenance / Suitable for Rural Solar Applications",
+  },
+  panels:{
+    "10W":"Monocrystalline Solar Panel / 10W / Voc: 7.2V / Isc: 1.8A / Cell Efficiency: 18%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box / 25 Year Performance Warranty",
+    "20W":"Monocrystalline Solar Panel / 20W / Voc: 10.8V / Isc: 2.4A / Cell Efficiency: 18%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box / 25 Year Performance Warranty",
+    "25W":"Monocrystalline Solar Panel / 25W / Voc: 11.5V / Isc: 2.8A / Cell Efficiency: 18%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box",
+    "40W":"Monocrystalline Solar Panel / 40W / Voc: 13.2V / Isc: 3.8A / Cell Efficiency: 19%+ / Aluminium Frame / 3.2mm Tempered Glass / IP67 Junction Box / Anti-Reflective Coating",
+    "60W":"Monocrystalline Solar Panel / 60W / Voc: 17.5V / Isc: 4.2A / Cell Efficiency: 19%+ / Aluminium Frame / 3.2mm Tempered Glass / IP67 Junction Box / Anti-Reflective Coating",
+    "75W":"Monocrystalline Solar Panel / 75W / Voc: 21.8V / Isc: 4.5A / Cell Efficiency: 19%+ / Aluminium Frame / 3.2mm Tempered Glass / IP67 Junction Box",
+    "100W":"Monocrystalline Solar Panel / 100W / Voc: 22.5V / Isc: 5.8A / Cell Efficiency: 19%+ / Aluminium Frame / 3.2mm Tempered Glass / IP67 Junction Box / Anti-Reflective Coating",
+    "120W":"Monocrystalline Solar Panel / 120W / Voc: 22.8V / Isc: 6.8A / Cell Efficiency: 19%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box",
+    "150W":"Monocrystalline Solar Panel / 150W / Voc: 22.9V / Isc: 8.5A / Cell Efficiency: 19%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box",
+    "200W":"Monocrystalline Solar Panel / 200W / Voc: 24.3V / Isc: 10.5A / Cell Efficiency: 20%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box",
+    "335W":"Monocrystalline Solar Panel / 335W / Voc: 45.8V / Isc: 9.2A / Cell Efficiency: 20%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box / Half Cut Cell Technology",
+    "550W":"Monocrystalline Solar Panel / 550W / Voc: 49.8V / Isc: 13.9A / Cell Efficiency: 21%+ / Aluminium Frame / Tempered Glass / IP67 Junction Box / Bifacial Half Cut Cell",
+  },
+  poles:{
+    "NONE":"Supply Only — No Pole Included in This Quotation",
+    "R_6M_76":"Round Tubular Pole / Height: 6 Mtr / Outer Diameter: 76mm / Thickness: 3.15mm / Material: MS IS 1161 / Hot Dip Galvanized (HDG) / Foundation Bolt M16×450mm Set / Solar Panel Arm / Nut Bolt / As per IS:2713",
+    "O_6M_70x130":"Octagonal Pole / Height: 6 Mtr / Bottom Dia: 130mm / Top Dia: 70mm / Thickness: 3mm / Material: MS IS 2062 Gr.A / Hot Dip Galvanized (HDG) / Foundation Bolt M20×600mm / Solar Panel Arm / Nut Bolt / As per IS:2713",
+    "O_6M_4L":"Octagonal Pole / Height: 6 Mtr / Bottom Dia: 130mm / Top Dia: 70mm / Thickness: 3mm / Hot Dip Galvanized / Foundation Bolt M20×600mm / 4-Light Outreach Arm / Panel Structure / Nut Bolt / As per IS:2713",
+    "O_6M_5L":"Octagonal Pole / Height: 6 Mtr / 5-Light Outreach Arm / Hot Dip Galvanized / Foundation Bolt M20×600mm / Panel Structure / Nut Bolt / As per IS:2713",
+    "O_6M_6L":"Octagonal Pole / Height: 6 Mtr / 6-Light Outreach Arm / Hot Dip Galvanized / Foundation Bolt M20×600mm / Panel Structure / Nut Bolt / As per IS:2713",
+    "O_7M_70x130":"Octagonal Pole / Height: 7 Mtr / Bottom Dia: 130mm / Top Dia: 70mm / Thickness: 3mm / Material: MS IS 2062 Gr.A / Hot Dip Galvanized (HDG) / Foundation Bolt M20×600mm / Solar Panel Arm / Nut Bolt / As per IS:2713",
+    "O_7M_4L":"Octagonal Pole / Height: 7 Mtr / Bottom Dia: 130mm / Top Dia: 70mm / Hot Dip Galvanized / Foundation Bolt M20×600mm / 4-Light Outreach Arm / Panel Structure / As per IS:2713",
+    "O_9M_70x155_SS":"Octagonal Pole / Height: 9 Mtr / Bottom Dia: 155mm / Top Dia: 70mm / Thickness: 3.15mm / Hot Dip Galvanized / Foundation Bolt M24×700mm / Single Stem Arm / Panel Structure / As per IS:2713",
+    "O_9M_100x200_SS":"Octagonal Pole / Height: 9 Mtr / Bottom Dia: 200mm / Top Dia: 100mm / Thickness: 4mm / Hot Dip Galvanized / Foundation Bolt M24×700mm / Single Stem Arm / Heavy Duty / As per IS:2713",
+    "O_9M_100x200_DS":"Octagonal Pole / Height: 9 Mtr / Bottom Dia: 200mm / Top Dia: 100mm / Thickness: 4mm / Hot Dip Galvanized / Foundation Bolt M24×700mm / Double Stem Arm / Heavy Duty / As per IS:2713",
+    "O_12M_110x242":"Octagonal Pole / Height: 12 Mtr / Bottom Dia: 242mm / Top Dia: 110mm / Thickness: 4mm / Material: MS IS 2062 Gr.A / Hot Dip Galvanized / Foundation Bolt M30×800mm / Arm & Structure / As per IS:2713",
+    "P_9M_Mot":"Polygonal High Mast Pole / Height: 9 Mtr / Motorised Lowering Device / Stainless Steel Wire Rope / Lantern Carriage Ring / Hot Dip Galvanized / Foundation Bolt M30×1000mm / FRP Cover / Operation Panel Box / As per IS:2713",
+    "P_12M_Mot":"Polygonal High Mast Pole / Height: 12 Mtr / Motorised Lowering Device / Stainless Steel Wire Rope / Lantern Carriage Ring / Hot Dip Galvanized / Foundation Bolt M36×1200mm / FRP Cover / Operation Panel Box / As per IS:2713",
+  },
+  structures:{
+    "PS_NONE":"Panel Structure — Included with Pole",
+    "PS_40W_4":"Solar Panel Structure / For 4 Panels of 40W Each / MS Fabricated / Hot Dip Galvanized / Adjustable Tilt Angle / Nut Bolt Fasteners / As per site requirement",
+    "PS_40W_5":"Solar Panel Structure / For 5 Panels of 40W Each / MS Fabricated / Hot Dip Galvanized / Adjustable Tilt Angle",
+    "PS_60W_4":"Solar Panel Structure / For 4 Panels of 60W Each / MS Fabricated / Hot Dip Galvanized / Adjustable Tilt Angle / Heavy Duty Clamps",
+    "PS_60W_5":"Solar Panel Structure / For 5 Panels of 60W Each / MS Fabricated / Hot Dip Galvanized / Adjustable Tilt Angle",
+    "PS_75W_4":"Solar Panel Structure / For 4 Panels of 75W Each / MS Fabricated / Hot Dip Galvanized / Heavy Duty Design / Adjustable Tilt",
+    "PS_75W_5":"Solar Panel Structure / For 5 Panels of 75W Each / MS Fabricated / Hot Dip Galvanized / Heavy Duty Design",
+    "PS_100W_4":"Solar Panel Structure / For 4 Panels of 100W Each / MS Heavy Duty Fabricated / Hot Dip Galvanized / Wind Resistant Design / Adjustable Tilt Angle 0-60°",
+    "PS_100W_6":"Solar Panel Structure / For 6 Panels of 100W Each / MS Heavy Duty Fabricated / Hot Dip Galvanized / Wind Resistant Design",
+  },
+};
+
+// ═══════════════════════════════════════════════════
+// PRICE MASTER DATA
+// ═══════════════════════════════════════════════════
+const DP = {
+  bodies:[
+    {id:"SL_Lens_30W",label:"SL Lense Body (Max 30W)",rate:700,maxW:30},
+    {id:"SL_Glass_30W",label:"SL Glass Body (Max 30W)",rate:900,maxW:30},
+    {id:"SL_Frame_80W",label:"SL Open Frame Body (Max 80W)",rate:1500,maxW:80},
+    {id:"FL_50W",label:"Flood Light Down Chok 50W",rate:805,maxW:50},
+    {id:"FL_100W",label:"Flood Light Down Chok 100W",rate:1380,maxW:100},
+    {id:"FL_150W",label:"Flood Light Down Chok 150W",rate:1725,maxW:150},
+  ],
+  batteries:[
+    {id:"9A_3.7V",label:"Li-Ion 9Ah @ 3.7V",rate:310},
+    {id:"24A_3.2V",label:"LiFePO4 24Ah @ 3.2V",rate:600},
+    {id:"48A_3.2V",label:"LiFePO4 48Ah @ 3.2V",rate:1100},
+    {id:"72A_3.2V",label:"LiFePO4 72Ah @ 3.2V",rate:1550},
+    {id:"96A_3.2V",label:"LiFePO4 96Ah @ 3.2V",rate:2180},
+    {id:"120A_3.2V",label:"LiFePO4 120Ah @ 3.2V",rate:2640},
+    {id:"144A_3.2V",label:"LiFePO4 144Ah @ 3.2V",rate:3240},
+    {id:"168A_3.2V",label:"LiFePO4 168Ah @ 3.2V",rate:3760},
+    {id:"192A_3.2V",label:"LiFePO4 192Ah @ 3.2V",rate:4280},
+    {id:"216A_3.2V",label:"LiFePO4 216Ah @ 3.2V",rate:4700},
+    {id:"240A_3.2V",label:"LiFePO4 240Ah @ 3.2V",rate:5120},
+    {id:"288A_3.2V",label:"LiFePO4 288Ah @ 3.2V",rate:5540},
+    {id:"320A_3.2V",label:"LiFePO4 320Ah @ 3.2V",rate:6060},
+    {id:"384A_3.2V",label:"LiFePO4 384Ah @ 3.2V",rate:6580},
+    {id:"432A_3.2V",label:"LiFePO4 432Ah @ 3.2V",rate:7800},
+    {id:"7.2A_SMF",label:"SMF Battery 7.2Ah @ 12V",rate:748},
+    {id:"20A_Tub",label:"Tubular Battery 20Ah",rate:2818},
+  ],
+  panels:[
+    {id:"10W",label:"Solar Panel 10W Mono"},
+    {id:"20W",label:"Solar Panel 20W Mono",rate:450},
+    {id:"25W",label:"Solar Panel 25W Mono",rate:600},
+    {id:"40W",label:"Solar Panel 40W Mono",rate:880},
+    {id:"60W",label:"Solar Panel 60W Mono",rate:1320},
+    {id:"75W",label:"Solar Panel 75W Mono",rate:1650},
+    {id:"100W",label:"Solar Panel 100W Mono",rate:2200},
+    {id:"120W",label:"Solar Panel 120W Mono",rate:2640},
+    {id:"150W",label:"Solar Panel 150W Mono",rate:3300},
+    {id:"200W",label:"Solar Panel 200W Mono",rate:4400},
+    {id:"335W",label:"Solar Panel 335W Mono",rate:6030},
+    {id:"550W",label:"Solar Panel 550W Mono",rate:8800},
+  ],
+  poles:[
+    {id:"NONE",label:"No Pole — Supply Only",rate:0},
+    {id:"R_6M_76",label:"Round Pole 6 Mtr × Ø76mm",rate:1600},
+    {id:"O_6M_70x130",label:"Octagonal Pole 6 Mtr × 70×130mm",rate:6700},
+    {id:"O_6M_4L",label:"Octagonal Pole 6 Mtr / 4 Light",rate:6300},
+    {id:"O_6M_5L",label:"Octagonal Pole 6 Mtr / 5 Light",rate:6300},
+    {id:"O_6M_6L",label:"Octagonal Pole 6 Mtr / 6 Light",rate:6300},
+    {id:"O_7M_70x130",label:"Octagonal Pole 7 Mtr × 70×130mm",rate:7800},
+    {id:"O_7M_4L",label:"Octagonal Pole 7 Mtr / 4 Light",rate:7300},
+    {id:"O_9M_70x155_SS",label:"Octagonal Pole 9 Mtr × 70×155 SS",rate:10500},
+    {id:"O_9M_100x200_SS",label:"Octagonal Pole 9 Mtr × 100×200 SS",rate:13950},
+    {id:"O_9M_100x200_DS",label:"Octagonal Pole 9 Mtr × 100×200 DS",rate:14700},
+    {id:"O_12M_110x242",label:"Octagonal Pole 12 Mtr × 110×242",rate:20700},
+    {id:"P_9M_Mot",label:"Polygonal High Mast 9 Mtr Motorised",rate:41000},
+    {id:"P_12M_Mot",label:"Polygonal High Mast 12 Mtr Motorised",rate:49000},
+  ],
+  structures:[
+    {id:"PS_NONE",label:"Panel Structure — Included in Pole",rate:0},
+    {id:"PS_40W_4",label:"Panel Structure 40W / 4 Nos.",rate:1040},
+    {id:"PS_40W_5",label:"Panel Structure 40W / 5 Nos.",rate:1300},
+    {id:"PS_60W_4",label:"Panel Structure 60W / 4 Nos.",rate:1170},
+    {id:"PS_60W_5",label:"Panel Structure 60W / 5 Nos.",rate:1560},
+    {id:"PS_75W_4",label:"Panel Structure 75W / 4 Nos.",rate:1300},
+    {id:"PS_75W_5",label:"Panel Structure 75W / 5 Nos.",rate:1690},
+    {id:"PS_100W_4",label:"Panel Structure 100W / 4 Nos.",rate:2210},
+    {id:"PS_100W_6",label:"Panel Structure 100W / 6 Nos.",rate:3510},
+  ],
+  controllers:[
+    {id:"MPPT_10A",label:"MPPT Controller 10A/24V",rate:1000},
+    {id:"MPPT_20A",label:"MPPT Controller 20A",rate:1500},
+    {id:"PWM_10A",label:"PWM Controller 10A",rate:500},
+  ],
+  misc:[
+    {id:"BAT_BOX",label:"Battery Box IP65",rate:1200},
+    {id:"PCB_LENS_30W",label:"PCB Lense 10–30W",rate:15},
+    {id:"PCB_FRAME_80W",label:"PCB Frame 50–80W",rate:164},
+    {id:"FOUND_BOLT_M20",label:"Foundation Bolt Set M20×600mm",rate:350,desc:"Foundation Bolt Set / M20×600mm / Mild Steel / Hot Dip Galvanized / 4 Nos. with Nut & Washer / As per IS:1364"},
+    {id:"FOUND_BOLT_M24",label:"Foundation Bolt Set M24×700mm",rate:480,desc:"Foundation Bolt Set / M24×700mm / Mild Steel / Hot Dip Galvanized / 4 Nos. with Nut & Washer / As per IS:1364"},
+    {id:"FOUND_BOLT_M30",label:"Foundation Bolt Set M30×800mm",rate:750,desc:"Foundation Bolt Set / M30×800mm / Mild Steel / Hot Dip Galvanized / 4 Nos. with Nut & Washer / Heavy Duty / As per IS:1364"},
+    {id:"LADDER_GI",label:"GI Ladder for High Mast Pole",rate:2500,desc:"Galvanized Iron Ladder / Fixed Type / Rung Dia: 20mm / Side Rail: 40×6mm Flat / Hot Dip Galvanized / For High Mast Pole / As per Approved Drawing"},
+    {id:"PAINTING_EPOXY",label:"Epoxy/PU Painting (per coat)",rate:180,desc:"Epoxy / PU Painting / Surface Preparation by Grinding / Red Oxide Primer Coat / Final Finish Coat / Per Sq.m Rate / Shade as per Client Requirement"},
+  ],
+};
+
+const DC = [
+  {id:"cp01",name:"Solar Street Light — Complete System",unit:"Nos",rate:8500,
+   desc:"Semi-Integrated Solar Street Light / Brand: ENTRIX / OSRAM LED Body / Li-FePO4 Lithium Battery / Monocrystalline Solar Panel / MPPT Controller / Hot Dip GI Pole / Solar Panel Structure / Light Arm / Foundation Bolt / Nut Bolt / Commissioning / Warranty: 1 Year"},
+  {id:"cp02",name:"Solar High Mast Light — Complete System",unit:"Nos",rate:45000,
+   desc:"Solar High Mast Light System / Brand: ENTRIX / OSRAM LED / Li-FePO4 Battery / Mono Solar Panel / MPPT Controller / Octagonal GI Pole / Panel Structure / 4-Light Arms / Foundation Bolt / Ladder / Commissioning / Warranty: 1 Year"},
+  {id:"cp03",name:"LED Street Light — Supply & Installation",unit:"Nos",rate:3500,
+   desc:"LED Street Light / Brand: ENTRIX / OSRAM LED / Built-in Driver / Die Cast Aluminium Housing / IP65 Rating / Powder Coated / Supply, Installation & Commissioning / Warranty: 1 Year"},
+  {id:"cp04",name:"Octagonal GI Pole — Supply Only",unit:"Nos",rate:7000,
+   desc:"Octagonal Pole / Material: MS IS 2062 Gr.A / Hot Dip Galvanized / Foundation Bolt M20×600mm / Solar Panel Arm / Light Arm / Nut Bolt / As per Approved Drawing / IS:2713"},
+  {id:"cp05",name:"Round GI Pole — Supply Only",unit:"Nos",rate:2000,
+   desc:"Round Tubular Pole / Material: MS IS 1161 / Hot Dip Galvanized / Foundation Bolt Set / Solar Panel Arm / Nut Bolt / As per Approved Drawing"},
+  {id:"cp06",name:"Solar Water Pump System",unit:"Set",rate:35000,
+   desc:"Solar Water Pump System / 1 HP Submersible Pump + Motor / MPPT Solar Pump Controller / HDPE Pipe 32mm OD / Submersible Cable 2.5 Sq.mm 3 Core / SS Nipple / Bend / Socket / Teflon Tape / Brand: ENTRIX / Warranty: 1 Year"},
+  {id:"cp07",name:"Water Tank Structure — GI",unit:"Set",rate:28000,
+   desc:"Water Tank Structure / Capacity: 5000 Ltr / Material: Hot Dip GI MS / Height: 10 Ft above Ground / Foundation Bolt / GI Sheet Covering / As per Site Requirement"},
+  {id:"cp08",name:"Battery Replacement — Lithium LiFePO4",unit:"Nos",rate:2500,
+   desc:"Lithium Iron Phosphate Battery Replacement / LiFePO4 Grade A Series / 2000+ Cycle Life / As per Existing System Specification / Supply & Installation / Warranty: 1 Year"},
+  {id:"cp09",name:"Solar Panel Replacement",unit:"Nos",rate:1500,
+   desc:"Monocrystalline Solar Panel Replacement / As per Existing System Wattage / Supply & Installation on Existing Structure / IP67 Junction Box / Warranty: 1 Year"},
+  {id:"cp10",name:"Annual Maintenance Contract (AMC)",unit:"Year",rate:500,
+   desc:"Annual Maintenance Contract / 2 Preventive Visits per Year / Corrective Maintenance on Call / Battery & Panel Health Check / Controller Inspection / LED & Driver Check / Solar Panel Cleaning / Visit Report Provided"},
+  {id:"cp11",name:"Civil Foundation Work — Per Pole",unit:"Nos",rate:3500,
+   desc:"Civil Foundation Work / Excavation as per Drawing / PCC M15 Grade Concrete / Foundation Bolt Setting M20×600mm / Backfilling & Compaction / As per Approved Drawing"},
+  {id:"cp12",name:"MS Fabrication Work — Galvanized",unit:"Kg",rate:120,
+   desc:"Mild Steel Fabrication Work / Material: IS 2062 Gr.A / Hot Dip Galvanized Finish / As per Approved Drawing / Including Labour, Electrodes, Gas, Grinding / Delivery at Site"},
+  {id:"cp13",name:"Electrical Wiring & Cabling",unit:"RMT",rate:85,
+   desc:"Electrical Wiring & Cabling / FR PVC Insulated Copper Cable / FRLS Cable as per Specification / PVC Conduit Pipe / Junction Box / Supply & Erection / As per Site Requirement"},
+  {id:"cp14",name:"Painting Work — Epoxy / PU Finish",unit:"Sq.m",rate:150,
+   desc:"Painting Work / Surface Preparation by Grinding / Red Oxide Primer Coat / Epoxy / PU Paint Final Coat / Minimum 2 Coats / Shade as per Client Requirement"},
+  {id:"cp15",name:"Transport & Loading / Unloading",unit:"Trip",rate:2500,
+   desc:"Transportation Charges / Loading & Unloading / From Factory (Kamptee, Nagpur) to Site / Open Truck / As per Actual Distance / Risk after Delivery at Client's Responsibility"},
+];
+
+const DREC = {
+  "4stage":{12:"24A_3.2V",20:"48A_3.2V",30:"48A_3.2V",40:"72A_3.2V",50:"72A_3.2V",60:"96A_3.2V",80:"120A_3.2V",100:"144A_3.2V"},
+  "2stage":{12:"24A_3.2V",20:"48A_3.2V",30:"72A_3.2V",40:"96A_3.2V",50:"120A_3.2V",60:"120A_3.2V",80:"168A_3.2V",100:"192A_3.2V"},
+  "constant":{12:"48A_3.2V",20:"96A_3.2V",30:"144A_3.2V",40:"192A_3.2V",50:"216A_3.2V",60:"288A_3.2V",80:"384A_3.2V",100:"432A_3.2V"},
+};
+DREC["3stage"] = DREC["4stage"];
+const PREC = {
+  "4stage":{12:"20W",20:"40W",30:"40W",40:"60W",50:"60W",60:"75W",80:"100W",100:"120W"},
+  "2stage":{12:"20W",20:"40W",30:"60W",40:"60W",50:"75W",60:"100W",80:"120W",100:"150W"},
+  "constant":{12:"40W",20:"75W",30:"120W",40:"150W",50:"200W",60:"200W",80:"335W",100:"335W"},
+};
+PREC["3stage"] = PREC["4stage"];
+
+let CAT_CLR={bodies:"#1a3a7c",batteries:"#15803d",panels:"#92400e",poles:"#5b21b6",structures:"#0e7490",controllers:"#9a3412",misc:"#374151"};
+let CAT_ICO={bodies:"💡",batteries:"🔋",panels:"☀️",poles:"🗼",structures:"🏗",controllers:"⚙️",misc:"🔧"};
+let CAT_LBL={bodies:"Body / PCB / Driver",batteries:"Batteries",panels:"Solar Panels",poles:"Poles",structures:"Panel Structures",controllers:"Controllers",misc:"Misc Parts"};
+// loadUserCats() called in INIT below
+
+const CO={name:"ENTRIX INNOVATION",addr:"Sr. No. 129/B, Near Nagoba Mandir, Temasana Chowk, Symboysis College Road, Nagpur, Maharashtra - 441001",gstin:"27APMPP1315A1Z9",state:"Maharashtra - 27",email:"sales01@entrix.co.in",web:"www.entrix.co.in",b1:{n:"Punjab National Bank",ac:"5391008700000650",ifsc:"PUNB0539100",br:"Itwari"},b2:{n:"HDFC Bank",ac:"59209552552667",ifsc:"HDFC0003773",br:"Indora"}};
+
+// ═══ STATE ═══
+let role=null, uiRole="admin";
+let prices=JSON.parse(localStorage.getItem("ex_p")||"null")||JSON.parse(JSON.stringify(DP));
+let catalog=JSON.parse(localStorage.getItem("ex_c")||"null")||JSON.parse(JSON.stringify(DC));
+let adminPin=localStorage.getItem("ex_pin")||"1234";
+let gMargin=parseFloat(localStorage.getItem("ex_m")||"30");
+let items=[];
+let quoteTransport={amount:0,gstPct:18};
+
+// ═══ UTILS ═══
+const inr=n=>"₹"+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const uid=()=>Date.now()+"_"+Math.random().toString(36).slice(2,5);
+const dateStr=d=>{if(!d)return"";const p=d.split("-");return`${p[2]}/${p[1]}/${p[0]}`;};
+function amtWords(n){const a=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],t=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];function c(x){if(!x)return"";if(x<20)return a[x]+" ";if(x<100)return t[Math.floor(x/10)]+" "+(x%10?a[x%10]+" ":"");if(x<1e3)return a[Math.floor(x/100)]+"Hundred "+(x%100?c(x%100):"");if(x<1e5)return c(Math.floor(x/1000))+"Thousand "+(x%1000?c(x%1000):"");if(x<1e7)return c(Math.floor(x/1e5))+"Lakh "+(x%1e5?c(x%1e5):"");return c(Math.floor(x/1e7))+"Crore "+(x%1e7?c(x%1e7):"");}const r=Math.round(n*100)/100,i=Math.floor(r),d=Math.round((r-i)*100);return c(i).trim()+" Rupees"+(d?" and "+c(d).trim()+" Paise":"")+" Only";}
+const V=id=>{const e=document.getElementById(id);if(!e)return"";return e.tagName==="SELECT"?e.options[e.selectedIndex]?.value||"":e.value||"";};
+const setV=(id,v)=>{const e=document.getElementById(id);if(!e)return;if(e.tagName==="SELECT"){for(let o of e.options)if(o.value===v||o.text===v){o.selected=true;break;}}else e.value=v;};
+const showMsg=(id,txt,cls)=>{const e=document.getElementById(id);if(!e)return;e.innerHTML=`<div class="msg ${cls}">${txt}</div>`;setTimeout(()=>{if(e)e.innerHTML="";},3000);};
+const getRate=(cat,id)=>(prices[cat]||[]).find(x=>x.id===id)?.rate||0;
+function getAutoRec(w,d){const bmap=DREC[d]||DREC["2stage"];const pmap=PREC[d]||PREC["2stage"];const wkeys=Object.keys(bmap).map(Number).sort((a,b)=>a-b);let bw=wkeys[wkeys.length-1];for(const k of wkeys)if(k>=w){bw=k;break;}return{bat:bmap[bw]||"48A_3.2V",panel:pmap[bw]||"60W"};}
+const isSolar=t=>t==="SSL"||t==="SHM";
+const getSpec=(cat,id)=>(prices[cat]||[]).find(x=>x.id===id)?.desc||SPECS[cat]?.[id]||"";
+
+// ═══ CALC ═══
+function calcItem(it){
+  const qty=parseInt(it.qty)||1;
+  if(it.custom){
+    const baseRate=parseFloat(it.customRate)||0;
+    const disc=(parseFloat(it.discount)||0)/100;
+    const u=Math.round(baseRate*(1-disc)*100)/100;
+    const discAmt=Math.round(baseRate*disc*qty*100)/100;
+    const s=u*qty;const g=s*(it.gstPct||0)/100;
+    return{unit:u,qty,sub:s,gst:g,trans:0,total:s+g,base:baseRate,discAmt,discPct:parseFloat(it.discount)||0};
+  }
+  const ub=it.useBody!==false,ubat=it.useBat!==false,up=it.usePanel!==false,upo=it.usePole===true,ups=it.usePS===true,ufb=it.useFoundBolt===true,uld=it.useLadder===true,upt=it.usePainting===true;
+  const base=(ub?getRate("bodies",it.bodyId)*(it.bodyQty||1):0)+(ubat?getRate("batteries",it.batId)*(it.batQty||1):0)+(up?getRate("panels",it.panelId)*(it.panelQty||1):0)+(upo?getRate("poles",it.poleId):0)+(ups?getRate("structures",it.psId):0)+(ufb?getRate("misc",it.foundBoltId)*(it.foundBoltQty||1):0)+(uld?getRate("misc",it.ladderId):0)+(upt?getRate("misc",it.paintingId):0);
+  const m=(it.margin!=null?it.margin:gMargin)/100;
+  const warr=isSolar(it.type)?((it.warranty===2?1.1:it.warranty===3?1.21:1)):1;
+  const unit=Math.round(base*(1+m)*warr);
+  const sub=unit*qty;const gst=sub*(it.gstPct||0)/100;
+  return{unit,qty,sub,gst,trans:0,total:sub+gst,base};
+}
+const getTotals=()=>{
+  const base=items.reduce((a,it)=>{const c=calcItem(it);a.sub+=c.sub;a.gst+=c.gst;a.grand+=c.total;return a;},{sub:0,gst:0,grand:0});
+  const tAmt=parseFloat(quoteTransport.amount)||0;
+  const tGst=tAmt*(parseFloat(quoteTransport.gstPct)||0)/100;
+  const trans=tAmt+tGst;
+  return{sub:base.sub,gst:base.gst,trans,transAmt:tAmt,transGst:tGst,grand:base.grand+trans};
+};
+
+// ═══ LOGIN ═══
+function pickRole(r){uiRole=r;document.getElementById("rc-admin").classList.toggle("selected",r==="admin");document.getElementById("rc-user").classList.toggle("selected",r==="user");document.getElementById("pin-div").style.display=r==="admin"?"":"none";}
+function doLogin(){
+  if(uiRole==="admin"&&document.getElementById("loginPin").value!==adminPin){document.getElementById("loginErr").textContent="❌ Wrong password";return;}
+  role=uiRole;
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("mainApp").style.display="";
+  const pill=document.getElementById("rolePill");pill.textContent=role==="admin"?"🔐 ADMIN":"👤 USER";pill.className="role-pill "+(role==="admin"?"pill-admin":"pill-user");
+  buildTabs();if(!items.length)addItem();showTab("quote");
+}
+function logout(){role=null;items=[];document.getElementById("loginScreen").style.display="";document.getElementById("mainApp").style.display="none";document.getElementById("loginPin").value="";document.getElementById("loginErr").textContent="";pickRole("admin");}
+
+// ═══ TABS ═══
+function buildTabs(){
+  const ts=role==="admin"?[["quote","📄 Quote"],["prices","💰 Prices"],["history","🗂 History"],["preview","👁 Preview"],["settings","⚙️ Settings"]]:[["quote","📄 Quote"],["history","🗂 History"],["preview","👁 Preview"]];
+  document.getElementById("tabBar").innerHTML=ts.map(([t,l])=>`<button class="tab" id="tb_${t}" onclick="showTab('${t}')">${l}</button>`).join("")+"<button class='tab' style='margin-left:auto;background:#e8a020;color:#0a1f4e;border-radius:6px 6px 0 0;padding:10px 14px' onclick=\"showTab('preview')\">📄 Preview</button>";
+}
+function showTab(t){
+  document.querySelectorAll("[id^=tab-]").forEach(e=>e.style.display="none");
+  document.querySelectorAll(".tab").forEach(e=>e.classList.remove("active"));
+  document.getElementById("tab-"+t).style.display="";
+  const tb=document.getElementById("tb_"+t);if(tb)tb.classList.add("active");
+  if(t==="quote")renderQuoteTab();
+  else if(t==="prices")renderPricesTab();
+  else if(t==="history")renderHistoryTab();
+  else if(t==="preview")renderPreview();
+  else if(t==="settings")renderSettingsTab();
+}
+
+// ═══ NEW ITEM ═══
+function newItem(){
+  const it={id:uid(),custom:false,type:"SSL",wattage:20,qty:1,dimming:"2stage",warranty:1,bodyId:"SL_Glass_30W",bodyQty:1,batId:"72A_3.2V",batQty:1,panelId:"60W",panelQty:1,poleId:"NONE",psId:"PS_NONE",foundBoltId:"FOUND_BOLT_M20",foundBoltQty:1,ladderId:"LADDER_GI",paintingId:"PAINTING_EPOXY",gstPct:5,transport:0,description:"",margin:gMargin,useBody:true,useBat:true,usePanel:true,usePole:false,usePS:false,useFoundBolt:false,useLadder:false,usePainting:false};
+  const rec=getAutoRec(it.wattage,it.dimming);it.batId=rec.bat;it.panelId=rec.panel;
+  return it;
+}
+function addItem(){items.push(newItem());renderItems();}
+function addCustomItem(){items.push({id:uid(),custom:true,priceMasterId:"",priceMasterCat:"",catalogId:"",customName:"",customDesc:"",customRate:"",originalRate:0,discount:0,qty:1,gstPct:18,transport:0});renderItems();}
+function removeItem(id){items=items.filter(x=>x.id!==id);renderItems();}
+
+function updField(id,field,val){
+  const it=items.find(x=>x.id===id);if(!it)return;
+  it[field]=val;
+  if(field==="wattage"||field==="dimming"){const rec=getAutoRec(Number(field==="wattage"?val:it.wattage),field==="dimming"?val:it.dimming);it.batId=rec.bat;it.panelId=rec.panel;}
+  if(field==="type"){
+    if(!isSolar(val)){it.dimming="2stage";it.warranty=1;}
+    if(val==="POLE"){it.useBody=false;it.useBat=false;it.usePanel=false;it.usePole=true;it.usePS=false;it.gstPct=18;}
+    else if(val==="SSL"||val==="SHM"){it.useBody=true;it.useBat=true;it.usePanel=true;it.gstPct=5;}
+    else if(val==="LED"){it.useBody=true;it.useBat=false;it.usePanel=false;it.usePole=false;it.gstPct=18;}
+  }
+  if(field==="catalogId"){
+    const cp=catalog.find(x=>x.id===val);
+    if(cp){it.customName=cp.name;it.customDesc=cp.desc;if(!it.customRate||it.customRate==0){it.customRate=cp.rate;it.originalRate=cp.rate;}}
+  }
+  if(field==="priceMasterId"){
+    if(!val){it.priceMasterCat="";it.customName="";it.customDesc="";it.customRate="";it.originalRate=0;return;}
+    // Search all price categories
+    let found=null,foundCat="";
+    for(const cat of Object.keys(prices)){
+      const item=(prices[cat]||[]).find(x=>x.id===val);
+      if(item){found=item;foundCat=cat;break;}
+    }
+    if(found){
+      it.priceMasterCat=foundCat;
+      it.customName=found.label;
+      const desc=found.desc||(SPECS[foundCat]?.[found.id])||"";
+      it.customDesc=desc;
+      it.customRate=found.rate||0;
+      it.originalRate=found.rate||0;
+      it.discount=0;
+    }
+  }
+  renderItems();
+}
+function toggleComp(id,field){
+  const it=items.find(x=>x.id===id);if(!it)return;
+  const defOff=field==="usePole"||field==="usePS";
+  if(it[field]===undefined)it[field]=defOff;
+  it[field]=!it[field];
+  renderItems();
+}
+
+// ═══ RENDER QUOTE TAB ═══
+function renderQuoteTab(){
+  const isAdmin=role==="admin";
+  const t=document.getElementById("tab-quote");
+  const today=new Date().toISOString().split("T")[0];
+  const vd=new Date();vd.setDate(vd.getDate()+15);
+  t.innerHTML=`
+    ${isAdmin?`<div class="mb">
+      <div class="mb-title">🎯 Global Profit Margin <span style="font-size:10px;opacity:.7">(Admin Only)</span></div>
+      <div class="mb-row">
+        <input type="range" min="0" max="100" id="gmSlider" value="${gMargin}" oninput="syncGM(this.value)">
+        <input type="number" class="mb-num" id="gmNum" value="${gMargin}" oninput="syncGM(this.value)">
+        <span style="font-weight:700;color:#8a5a00">%</span>
+        <button class="btn btn-gold btn-sm" onclick="applyGM()">⚡ Apply All</button>
+      </div>
+    </div>`:""}
+    <div class="card">
+      <div class="ct">📋 Client Information</div>
+      <div class="row2">
+        <div><label>Client / Company Name</label><input id="cName" placeholder="Sharma Infratech Pvt Ltd"></div>
+        <div><label>Contact Person</label><input id="cPerson" placeholder="Mr. / Ms."></div>
+      </div>
+      <div class="row2">
+        <div><label>City / Location</label><input id="cCity" placeholder="Nagpur, Maharashtra"></div>
+        <div><label>Phone / Email</label><input id="cContact" placeholder="9876543210"></div>
+      </div>
+      <label>Full Address</label><input id="cAddr" placeholder="Full address…">
+      <label>Client GSTIN (optional)</label><input id="cGstin" placeholder="27XXXXX…">
+    </div>
+    <div class="card">
+      <div class="ct">⚙️ Quotation Settings</div>
+      <div class="row2">
+        <div><label>Document Type</label>
+          <select id="docType"><option>Quotation</option><option>Sales Order</option><option>Proforma Invoice</option></select></div>
+        <div><label>Quote Number</label><input id="quoteNo" value="ENTRIX/${new Date().getFullYear()}/${String(Math.floor(Math.random()*900)+100).padStart(3,'0')}"></div>
+      </div>
+      <div class="row2">
+        <div><label>Date</label><input type="date" id="quoteDate" value="${today}"></div>
+        <div><label>Valid Until</label><input type="date" id="validDate" value="${vd.toISOString().split('T')[0]}"></div>
+      </div>
+      <label>Remarks</label><input id="remarks" value="Transport extra at actual.">
+    </div>
+    <!-- QUOTATION TRANSPORT -->
+    <div class="card" style="border:1.5px solid #34d399">
+      <div class="ct" style="color:#065f46;border-color:#34d399">🚚 Transport Charges (Whole Quotation)</div>
+      <div class="row2">
+        <div>
+          <label>Transport Amount (₹)</label>
+          <input type="number" min="0" id="qTransAmt" placeholder="0 = Transport extra at actual"
+            value="${quoteTransport.amount||''}"
+            oninput="quoteTransport.amount=parseFloat(this.value)||0;updateTotals()">
+        </div>
+        <div>
+          <label>Transport GST %</label>
+          <select id="qTransGst" onchange="quoteTransport.gstPct=parseInt(this.value);updateTotals()">
+            ${[5,12,18,28,0].map(g=>`<option value="${g}"${g===(quoteTransport.gstPct||18)?" selected":""}>${g}%</option>`).join("")}
+          </select>
+        </div>
+      </div>
+      <div id="transPreview" style="margin-top:8px;font-size:12px;color:#065f46;font-weight:600;background:#ecfdf5;border-radius:7px;padding:8px 10px;display:none"></div>
+    </div>
+    <div class="card">
+      <div class="ct">🌞 Product Items</div>
+      <div id="itemsContainer"></div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="btn btn-navy" onclick="addItem()">＋ Standard Item</button>
+        <button class="btn btn-purple" onclick="addCustomItem()">✚ Custom Item</button>
+      </div>
+      <div class="totals-box" id="totalsBox">
+        <div class="tot-row"><span>Subtotal (Before Tax)</span><span id="tSub">₹0.00</span></div>
+        <div class="tot-row"><span>Total GST</span><span id="tGst">₹0.00</span></div>
+        <div class="tot-row" id="tTransRow" style="display:none"><span>Transport</span><span id="tTrans"></span></div>
+        <div class="tot-grand"><span>GRAND TOTAL</span><span id="tGrand">₹0.00</span></div>
+        <div class="tot-words" id="tWords"></div>
+      </div>
+    </div>
+    <div class="act-grid" id="noprint">
+      <button class="btn btn-pdf btn-full" onclick="downloadPDF()">📥 PDF</button>
+      <button class="btn btn-wa btn-full" onclick="shareWA()">📱 WhatsApp</button>
+      <button class="btn btn-green btn-full" onclick="saveQuote()">💾 Save</button>
+      <button class="btn btn-gold btn-full" onclick="showTab('preview')">👁 Preview</button>
+    </div>
+    <div id="quoteMsg"></div>`;
+  renderItems();
+}
+function syncGM(v){gMargin=parseFloat(v)||0;localStorage.setItem("ex_m",gMargin);const s=document.getElementById("gmSlider"),n=document.getElementById("gmNum");if(s)s.value=v;if(n)n.value=v;}
+function applyGM(){items.forEach(it=>{if(!it.custom)it.margin=gMargin;});renderItems();}
+
+// ═══ RENDER ITEMS ═══
+function renderItems(){
+  const c=document.getElementById("itemsContainer");if(!c)return;
+  const isAdmin=role==="admin";
+  if(!items.length){c.innerHTML=`<div class="empty"><i>🌞</i>Click buttons below to add items.</div>`;updateTotals();return;}
+  c.innerHTML=items.map((it,idx)=>it.custom?renderCustomCard(it,idx):renderStdCard(it,idx,isAdmin)).join("");
+  updateTotals();
+}
+
+function renderStdCard(it,idx,isAdmin){
+  const calc=calcItem(it);
+  const rec=getAutoRec(it.wattage,it.dimming);
+  const solar=isSolar(it.type);
+
+  // Component toggles
+  const tog=(field,ico,lbl)=>{const on=field==="usePole"||field==="usePS"?it[field]===true:it[field]!==false;return`<div class="ctog ${on?'on':'off'}" onclick="toggleComp('${it.id}','${field}')"><span class="ck">${on?"☑":"☐"}</span>${ico} ${lbl}</div>`;};
+
+  // Spec box helper
+  const specBox=(cat,id,extra="")=>{const s=getSpec(cat,id);return s?`<div class="spec-box"><div class="spec-title">📋 Specification</div>${s}${extra?`<br><b>${extra}</b>`:""}</div>`:"";}
+
+  // Body section
+  // Body section — no spec box
+  const bodySection=it.useBody!==false?`<div class="comp-detail">
+    <label>💡 Body / LED Type <span style="color:#1a3a7c;font-size:10px;font-weight:500">— Qty per Set</span></label>
+    <div class="ifl">
+      <select style="flex:1" onchange="updField('${it.id}','bodyId',this.value)">${mkSel("bodies",it.bodyId,isAdmin)}</select>
+      <input type="number" min="1" value="${it.bodyQty||1}" style="width:54px;text-align:center" onchange="updField('${it.id}','bodyQty',parseInt(this.value)||1)" title="Qty per Set">
+    </div>
+  </div>`:"";
+
+  // Battery section — no spec box
+  const batSection=it.useBat!==false?`<div class="comp-detail">
+    <label>🔋 Battery <span style="color:#15803d;font-size:10px;font-weight:500">— Auto: ${rec.bat} | Qty per Set</span></label>
+    <div class="ifl">
+      <select style="flex:1" onchange="updField('${it.id}','batId',this.value)">${mkSel("batteries",it.batId,isAdmin)}</select>
+      <input type="number" min="1" value="${it.batQty||1}" style="width:54px;text-align:center" onchange="updField('${it.id}','batQty',parseInt(this.value)||1)" title="Qty per Set">
+    </div>
+  </div>`:"";
+
+  // Panel section — no spec box
+  const panelSection=it.usePanel!==false?`<div class="comp-detail">
+    <label>☀️ Solar Panel <span style="color:#92400e;font-size:10px;font-weight:500">— Auto: ${rec.panel} | Qty per Set</span></label>
+    <div class="ifl">
+      <select style="flex:1" onchange="updField('${it.id}','panelId',this.value)">${mkSel("panels",it.panelId,isAdmin)}</select>
+      <input type="number" min="1" value="${it.panelQty||1}" style="width:54px;text-align:center" onchange="updField('${it.id}','panelQty',parseInt(this.value)||1)" title="Qty per Set">
+    </div>
+  </div>`:"";
+
+  // Pole section — no spec box
+  const poleSection=it.usePole===true?`<div class="comp-detail">
+    <label>🗼 Pole Type</label>
+    <select onchange="updField('${it.id}','poleId',this.value)">${mkSel("poles",it.poleId,isAdmin)}</select>
+  </div>`:"";
+
+  // Panel Structure section — no spec box
+  const psSection=it.usePS===true?`<div class="comp-detail">
+    <label>🏗 Panel Structure</label>
+    <select onchange="updField('${it.id}','psId',this.value)">${mkSel("structures",it.psId,isAdmin)}</select>
+  </div>`:"";
+
+  // Foundation Bolt section
+  const fbSection=it.useFoundBolt===true?`<div class="comp-detail">
+    <label>⚓ Foundation Bolt Set <span style="color:#5b21b6;font-size:10px;font-weight:500">— Qty per Set</span></label>
+    <div class="ifl">
+      <select style="flex:1" onchange="updField('${it.id}','foundBoltId',this.value)">${mkSel("misc",it.foundBoltId||"FOUND_BOLT_M20",isAdmin)}</select>
+      <input type="number" min="1" value="${it.foundBoltQty||1}" style="width:54px;text-align:center" onchange="updField('${it.id}','foundBoltQty',parseInt(this.value)||1)" title="Qty per Set">
+    </div>
+  </div>`:"";
+
+  // Ladder section
+  const ladderSection=it.useLadder===true?`<div class="comp-detail">
+    <label>🪜 Ladder Type</label>
+    <select onchange="updField('${it.id}','ladderId',this.value)">${mkSel("misc",it.ladderId||"LADDER_GI",isAdmin)}</select>
+  </div>`:"";
+
+  // Painting section
+  const paintingSection=it.usePainting===true?`<div class="comp-detail">
+    <label>🎨 Painting / Surface Treatment</label>
+    <select onchange="updField('${it.id}','paintingId',this.value)">${mkSel("misc",it.paintingId||"PAINTING_EPOXY",isAdmin)}</select>
+  </div>`:"";
+
+  // Solar-only fields (dimming + warranty)
+  const solarFields=solar?`<div class="solar-box">
+    <div class="solar-box-title">☀️ Solar Configuration</div>
+    <div class="row2">
+      <div><label>Dimming Mode</label>
+        <select onchange="updField('${it.id}','dimming',this.value)">
+          <option value="4stage"${it.dimming==="4stage"?" selected":""}>4 Stage Dimming</option>
+          <option value="3stage"${it.dimming==="3stage"?" selected":""}>3 Stage Dimming</option>
+          <option value="2stage"${it.dimming==="2stage"?" selected":""}>2 Stage Dimming</option>
+          <option value="constant"${it.dimming==="constant"?" selected":""}>Constant (Dusk–Dawn)</option>
+        </select>
+      </div>
+      <div><label>Warranty</label>
+        <select onchange="updField('${it.id}','warranty',parseInt(this.value))">
+          <option value="1"${it.warranty==1?" selected":""}>1 Year</option>
+          <option value="2"${it.warranty==2?" selected":""}>2 Year (+10%)</option>
+          <option value="3"${it.warranty==3?" selected":""}>3 Year (+21%)</option>
+        </select>
+      </div>
+    </div>
+  </div>`:`<div class="na-box">⚪ Dimming &amp; Warranty not applicable for <b>${it.type==="LED"?"LED Street Light":"Pole Only"}</b></div>`;
+
+  const marginRow=isAdmin?`<div><label>Profit Margin %</label>
+    <div class="ifl">
+      <input type="range" min="0" max="100" value="${it.margin??gMargin}" style="flex:1;accent-color:#e8a020" oninput="updField('${it.id}','margin',parseInt(this.value))">
+      <input type="number" min="0" max="200" value="${it.margin??gMargin}" style="width:54px;text-align:center;border:1.5px solid #e8a020;border-radius:6px;padding:5px;font-weight:700" onchange="updField('${it.id}','margin',parseFloat(this.value)||0)">
+      <span style="font-weight:700;color:#8a5a00">%</span>
+    </div></div>`:
+    `<div style="background:#eff6ff;border-radius:7px;padding:9px 12px;font-size:13px;color:#1e40af;font-weight:600">💰 Selling Price: <b>${inr(calc.unit)}</b> per set (excl. GST)</div>`;
+
+  const costTags=isAdmin?`<div class="tags">
+    <span class="tag tag-cost">📦 Cost/Set: ${inr(calc.base)}</span>
+    <span class="tag tag-unit">💰 Unit: ${inr(calc.unit)}</span>
+    <span class="tag tag-gst">🧾 GST: ${inr(calc.gst)}</span>
+    <span class="tag tag-total">✅ Total (${calc.qty} sets): ${inr(calc.total)}</span>
+  </div>`:`<div class="tags">
+    <span class="tag tag-unit">💰 ${inr(calc.unit)} × ${calc.qty}</span>
+    <span class="tag tag-gst">🧾 GST: ${inr(calc.gst)}</span>
+    <span class="tag tag-total">✅ Total: ${inr(calc.total)}</span>
+  </div>`;
+
+  return`<div class="item-card">
+    <div class="item-badge">Item ${idx+1}</div>
+    <div class="row2">
+      <div><label>Product Type</label>
+        <select onchange="updField('${it.id}','type',this.value)">
+          <option${it.type==="SSL"?" selected":""} value="SSL">🌟 Solar Street Light</option>
+          <option${it.type==="SHM"?" selected":""} value="SHM">🏗 Solar High Mast</option>
+        </select>
+      </div>
+      <div><label>Wattage</label>
+        <select onchange="updField('${it.id}','wattage',parseInt(this.value))">
+          ${[6,9,12,15,20,24,30,36,40,50,60,70,75,80,90,100].map(w=>`<option${w==it.wattage?" selected":""}>${w}W</option>`).join("")}
+        </select>
+      </div>
+    </div>
+
+    <!-- QTY BANNER -->
+    <div class="qty-box">
+      <div><div class="qty-label">SET QTY</div>
+        <input type="number" class="qty-input" min="1" value="${it.qty||1}" onchange="updField('${it.id}','qty',parseInt(this.value)||1)">
+      </div>
+      <div class="qty-hint">All components below × this qty<br>e.g. 10 = 10 lights + 10 batteries + 10 panels</div>
+    </div>
+
+    <!-- COMPONENT TOGGLES -->
+    <div class="comp-section">
+      <div class="comp-section-title">Include in Quotation</div>
+      <div class="comp-grid">
+        ${tog("useBody","💡","Body/LED")}
+        ${tog("useBat","🔋","Battery")}
+        ${tog("usePanel","☀️","Solar Panel")}
+        ${tog("usePole","🗼","Pole")}
+        ${tog("usePS","🏗","Panel Structure")}
+        ${tog("useFoundBolt","⚓","Foundation Bolt")}
+        ${tog("useLadder","🪜","Ladder")}
+        ${tog("usePainting","🎨","Painting")}
+      </div>
+    </div>
+
+    <!-- COMPONENT SELECTORS WITH SPECS -->
+    ${bodySection}${batSection}${panelSection}${poleSection}${psSection}${fbSection}${ladderSection}${paintingSection}
+
+    <!-- SOLAR FIELDS -->
+    ${solarFields}
+
+    <!-- GST + TRANSPORT -->
+    <div class="row2">
+      <div><label>GST %</label>
+        <select onchange="updField('${it.id}','gstPct',parseInt(this.value))">
+          ${[5,12,18,28,0].map(g=>`<option value="${g}"${g==it.gstPct?" selected":""}>${g}%</option>`).join("")}
+        </select>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- MARGIN -->
+    ${marginRow}
+
+    <!-- DESCRIPTION -->
+    <label>Quotation Description <span style="font-size:10px;color:#6b7280">(blank = auto-generate)</span></label>
+    <textarea rows="2" style="font-size:13px;resize:vertical" placeholder="Leave blank for auto description from selected specs…" onchange="updField('${it.id}','description',this.value)">${(it.description||"").replace(/</g,"&lt;")}</textarea>
+
+    ${costTags}
+    ${items.length>1?`<button class="btn btn-danger btn-sm btn-full" style="margin-top:8px" onclick="removeItem('${it.id}')">✕ Remove Item</button>`:""}
+  </div>`;
+}
+
+// Returns flat array of all products for search
+function getPriceMasterAll(){
+  const all=[];
+  Object.entries(prices).forEach(([cat,items])=>{
+    if(!items||!items.length)return;
+    const catLabel=(CAT_ICO[cat]||"")+" "+(CAT_LBL[cat]||cat);
+    items.forEach(it=>all.push({id:it.id,name:it.label,cat,catLabel,source:"prices"}));
+  });
+  catalog.forEach(cp=>all.push({id:cp.id,name:cp.name,cat:"catalog",catLabel:"⚙️ Custom Catalog",source:"catalog"}));
+  return all;
+}
+
+function filterPriceMaster(query){
+  const all=getPriceMasterAll();
+  if(!query.trim())return all;
+  const q=query.toLowerCase();
+  return all.filter(x=>x.name.toLowerCase().includes(q)||x.catLabel.toLowerCase().includes(q));
+}
+
+function renderPMDropdown(itemId,query,selectedId){
+  const results=filterPriceMaster(query);
+  const dd=document.getElementById("pmDrop_"+itemId);
+  if(!dd)return;
+  if(!results.length){dd.innerHTML=`<div class="pm-no-result">No products found for "<b>${query}</b>"</div>`;return;}
+  // Group by category
+  const groups={};
+  results.forEach(r=>{if(!groups[r.catLabel])groups[r.catLabel]=[];groups[r.catLabel].push(r);});
+  dd.innerHTML=Object.entries(groups).map(([grp,items])=>
+    `<div class="pm-cat-header">${grp}</div>`+
+    items.map(r=>`<div class="pm-option${r.id===selectedId?" active":""}" onclick="selectPMItem('${itemId}','${r.id}')">
+      <div class="pm-option-name">${r.name}</div>
+    </div>`).join("")
+  ).join("");
+}
+
+function selectPMItem(itemId,prodId){
+  // Update the search input to show selected name
+  const all=getPriceMasterAll();
+  const prod=all.find(x=>x.id===prodId);
+  const inp=document.getElementById("pmSearch_"+itemId);
+  if(inp&&prod)inp.value=prod.name;
+  hidePMDrop(itemId);
+  updField(itemId,"priceMasterId",prodId);
+}
+
+function showPMDrop(itemId){
+  const dd=document.getElementById("pmDrop_"+itemId);
+  if(dd)dd.style.display="";
+}
+function hidePMDrop(itemId){
+  const dd=document.getElementById("pmDrop_"+itemId);
+  if(dd)dd.style.display="none";
+}
+function onPMSearchInput(itemId,query){
+  showPMDrop(itemId);
+  const it=items.find(x=>x.id===itemId);
+  renderPMDropdown(itemId,query,it?it.priceMasterId||it.catalogId:"");
+}
+function clearPMSearch(itemId){
+  const inp=document.getElementById("pmSearch_"+itemId);
+  if(inp)inp.value="";
+  const it=items.find(x=>x.id===itemId);
+  if(it){it.priceMasterId="";it.priceMasterCat="";it.catalogId="";}
+  const dd=document.getElementById("pmDrop_"+itemId);
+  if(dd){renderPMDropdown(itemId,"","");dd.style.display="";}
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click",function(e){
+  document.querySelectorAll("[id^='pmDrop_']").forEach(dd=>{
+    const itemId=dd.id.replace("pmDrop_","");
+    const wrap=document.getElementById("pmWrap_"+itemId);
+    if(wrap&&!wrap.contains(e.target))dd.style.display="none";
+  });
+});
+
+function syncDiscount(itemId,val){
+  const it=items.find(x=>x.id===itemId);if(!it)return;
+  it.discount=parseFloat(val)||0;
+  const slider=document.getElementById("dslider_"+itemId);
+  const numEl=document.getElementById("dnum_"+itemId);
+  if(slider)slider.value=it.discount;
+  if(numEl)numEl.value=it.discount;
+  const calc=calcItem(it);
+  const afterEl=document.getElementById("dafter_"+itemId);
+  const totalEl=document.getElementById("dtotal_"+itemId);
+  const discAmtEl=document.getElementById("ddiscamt_"+itemId);
+  if(afterEl)afterEl.textContent=inr(calc.unit);
+  if(totalEl)totalEl.textContent=inr(calc.total);
+  if(discAmtEl)discAmtEl.textContent="-"+inr(calc.discAmt);
+  updateTotals();
+}
+
+function renderCustomCard(it,idx){
+  const calc=calcItem(it);
+  const isAdmin=role==="admin";
+  const baseRate=parseFloat(it.customRate)||0;
+  const disc=parseFloat(it.discount)||0;
+  const discAmt=Math.round(baseRate*disc/100*(it.qty||1)*100)/100;
+  const afterDisc=Math.round(baseRate*(1-disc/100)*100)/100;
+
+  return`<div class="item-card custom-card">
+    <div class="custom-badge">⚙️ Custom Item ${idx+1}</div>
+
+    <!-- ① PRICE MASTER SEARCH PICKER -->
+    <div class="pm-picker">
+      <div class="pm-picker-title">🗂 Search & Select from Price Master / Catalog</div>
+      <div class="pm-search-wrap" id="pmWrap_${it.id}">
+        <input type="text" class="pm-search-input" id="pmSearch_${it.id}"
+          placeholder="🔍 Type product name initials e.g. 'oct', 'lif', 'sol'…"
+          value="${(()=>{const sel=it.priceMasterId||it.catalogId;if(!sel)return'';const all=getPriceMasterAll();const f=all.find(x=>x.id===sel);return f?f.name:'';})()}"
+          oninput="onPMSearchInput('${it.id}',this.value)"
+          onfocus="showPMDrop('${it.id}');renderPMDropdown('${it.id}',this.value,'${it.priceMasterId||it.catalogId||''}')"
+          autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="pm-search-clear" onclick="clearPMSearch('${it.id}')" title="Clear selection">✕</button>
+        <div class="pm-dropdown" id="pmDrop_${it.id}" style="display:none"></div>
+      </div>
+      <div style="font-size:10px;color:#8eb4ff;margin-top:5px">↑ Type 2–3 letters to search • Select to auto-fill name, price &amp; specifications</div>
+    </div>
+
+    <!-- ② PRODUCT NAME -->
+    <label>Product / Service Name *</label>
+    <input value="${(it.customName||"").replace(/"/g,"&quot;")}"
+      placeholder="e.g. Octagonal Pole 7 Mtr, AMC Service, Wiring Work…"
+      onchange="updField('${it.id}','customName',this.value)"
+      style="font-weight:600;font-size:14px">
+
+    <!-- ③ SPECIFICATION / DESCRIPTION -->
+    <label>Specification / Description
+      <span style="font-size:10px;color:#7c3aed;font-weight:600;text-transform:none;letter-spacing:0"> — auto-filled, freely editable</span>
+    </label>
+    <textarea rows="4" style="font-size:12px;border-color:#c084fc;line-height:1.65;resize:vertical"
+      placeholder="Full product specifications, technical details, brand, material, standard, warranty…"
+      onchange="updField('${it.id}','customDesc',this.value)">${(it.customDesc||"").replace(/</g,"&lt;").replace(/"/g,"&quot;")}</textarea>
+
+    <!-- ④ QTY + BASE RATE -->
+    <div class="row2">
+      <div><label>Quantity</label>
+        <input type="number" min="1" value="${it.qty||1}"
+          onchange="updField('${it.id}','qty',parseInt(this.value)||1)">
+      </div>
+      <div><label>Base Rate / Unit (₹)</label>
+        <input type="number" min="0" value="${baseRate||""}" placeholder="0"
+          onchange="updField('${it.id}','customRate',this.value);syncDiscount('${it.id}',document.getElementById('dnum_${it.id}')?.value||0)"
+          style="font-weight:700;${!baseRate?'':'border-color:#92400e'}">
+      </div>
+    </div>
+
+    <!-- ⑤ DISCOUNT BOX -->
+    <div class="disc-box">
+      <div class="disc-title">🏷 Discount on This Item</div>
+      <div class="disc-row">
+        <input type="range" min="0" max="50" step="0.5" id="dslider_${it.id}" value="${disc}"
+          oninput="syncDiscount('${it.id}',this.value)">
+        <input type="number" class="disc-input" id="dnum_${it.id}" min="0" max="100" step="0.5" value="${disc}"
+          oninput="syncDiscount('${it.id}',this.value)">
+        <span style="font-weight:800;color:#065f46;font-size:15px">%</span>
+      </div>
+      ${baseRate>0?`<div class="price-breakdown">
+        <div class="pb-row"><span>Base Rate:</span><span>${inr(baseRate)}</span></div>
+        ${disc>0?`<div class="pb-row"><span>Discount (${disc}%):</span><span id="ddiscamt_${it.id}" style="color:#dc2626;font-weight:700">-${inr(discAmt)}</span></div>`:""}
+        <div class="pb-row final"><span>After Discount × ${it.qty||1}:</span><span id="dtotal_${it.id}">${inr(calc.total-calc.gst-calc.trans)}</span></div>
+      </div>`:""}
+    </div>
+
+    <!-- ⑥ GST + TRANSPORT -->
+    <div class="row2">
+      <div><label>GST %</label>
+        <select onchange="updField('${it.id}','gstPct',parseInt(this.value))">
+          ${[5,12,18,28,0].map(g=>`<option value="${g}"${g==it.gstPct?" selected":""}>${g}%</option>`).join("")}
+        </select>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- ⑦ SUMMARY TAGS -->
+    <div class="tags" style="margin-top:8px">
+      ${disc>0?`<span class="tag" style="background:#fee2e2;color:#991b1b">🏷 ${disc}% OFF</span>`:""}
+      <span class="tag tag-unit">💰 ${inr(afterDisc)}/unit × ${it.qty||1}</span>
+      <span class="tag tag-gst">🧾 GST: ${inr(calc.gst)}</span>
+      <span class="tag tag-total">✅ Total: ${inr(calc.total)}</span>
+    </div>
+
+    ${items.length>1?`<button class="btn btn-danger btn-sm btn-full" style="margin-top:10px" onclick="removeItem('${it.id}')">✕ Remove Item</button>`:""}
+  </div>`;
+}
+
+function mkSel(cat,sel,isAdmin){return(prices[cat]||[]).map(x=>`<option value="${x.id}"${x.id===sel?" selected":""}>${x.label}${isAdmin&&x.rate?" — "+inr(x.rate):""}</option>`).join("");}
+
+function updateTotals(){
+  const t=getTotals();
+  const s=document.getElementById("tSub"),g=document.getElementById("tGst"),gr=document.getElementById("tGrand"),w=document.getElementById("tWords");
+  if(s)s.textContent=inr(t.sub);if(g)g.textContent=inr(t.gst);if(gr)gr.textContent=inr(t.grand);if(w)w.textContent=amtWords(t.grand);
+  const tr=document.getElementById("tTransRow");
+  if(tr){if(t.trans>0){tr.style.display="";const tt=document.getElementById("tTrans");if(tt)tt.textContent=inr(t.trans);}else tr.style.display="none";}
+  // transport preview box
+  const tp=document.getElementById("transPreview");
+  if(tp){
+    if(t.transAmt>0){
+      tp.style.display="";
+      tp.innerHTML=`🚚 Transport: ${inr(t.transAmt)} + GST (${quoteTransport.gstPct}%): ${inr(t.transGst)} = <b>${inr(t.trans)}</b>`;
+    } else {tp.style.display="none";}
+  }
+}
+
+// ═══ AUTO DESCRIPTION ═══
+function buildAutoDesc(it){
+  if(it.custom){const d=it.customDesc||it.customName||(it.customName?it.customName:"Custom Item");return d;}
+  const parts=[];
+  const type=it.type==="SSL"?"Solar Street Light":it.type==="SHM"?"Solar High Mast":it.type==="LED"?"LED Street Light":"Pole Only";
+  parts.push(type);
+  if(it.type!=="POLE")parts.push(`${it.wattage}W`);
+  if(it.useBody!==false){const b=(prices.bodies||[]).find(x=>x.id===it.bodyId);if(b)parts.push(`${b.label}${(it.bodyQty||1)>1?' × '+(it.bodyQty||1):''}`)}
+  if(it.useBat!==false){const b=(prices.batteries||[]).find(x=>x.id===it.batId);if(b)parts.push(`${b.label} × ${it.batQty||1}`);}
+  if(it.usePanel!==false){const p=(prices.panels||[]).find(x=>x.id===it.panelId);if(p)parts.push(`${p.label} × ${it.panelQty||1}`);}
+  if(it.usePole===true){const p=(prices.poles||[]).find(x=>x.id===it.poleId);if(p&&it.poleId!=="NONE")parts.push(p.label);}
+  if(it.usePS===true){const p=(prices.structures||[]).find(x=>x.id===it.psId);if(p&&it.psId!=="PS_NONE")parts.push(p.label);}
+  if(it.useFoundBolt===true){const f=(prices.misc||[]).find(x=>x.id===it.foundBoltId);if(f)parts.push(f.label);}
+  if(it.useLadder===true){const l=(prices.misc||[]).find(x=>x.id===it.ladderId);if(l)parts.push(l.label);}
+  if(it.usePainting===true){const p=(prices.misc||[]).find(x=>x.id===it.paintingId);if(p)parts.push(p.label);}
+  if(isSolar(it.type)){const dm={"4stage":"4 Stage","3stage":"3 Stage","2stage":"2 Stage","constant":"Constant (Dusk-Dawn)"};parts.push(dm[it.dimming]||it.dimming);parts.push(`Warranty: ${it.warranty} Year`);}
+  return parts.join(" / ");
+}
+
+// ═══ PRICES TAB ═══
+function renderPricesTab(){
+  document.getElementById("tab-prices").innerHTML=`
+    <div class="card"><div class="ct">💰 Price Master — Admin Only</div>
+      <div class="srchbar">
+        <input id="pSrch" placeholder="🔍 Search…" oninput="renderPList()">
+        <select id="pCat" onchange="renderPList()">
+          <option value="all">All Categories</option>
+          ${Object.entries(CAT_LBL).map(([k,v])=>`<option value="${k}">${CAT_ICO[k]||"📦"} ${v}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <div id="addCatSection"></div>
+    <div id="pList"></div>
+    <div id="pMsg"></div>
+    <div id="catSection"></div>`;
+  renderAddCatSection();renderPList();renderCatSection();
+}
+function renderPList(){
+  const srch=(document.getElementById("pSrch")?.value||"").toLowerCase();
+  const cat=document.getElementById("pCat")?.value||"all";
+  const cats=cat==="all"?Object.keys(prices):[cat];
+  document.getElementById("pList").innerHTML=cats.map(ct=>{
+    const fitems=(prices[ct]||[]).filter(x=>!srch||x.label.toLowerCase().includes(srch)||(x.desc||"").toLowerCase().includes(srch));
+    if(!fitems.length&&srch)return"";
+    const col=CAT_CLR[ct]||"#333";
+    const specDefault=ct==="bodies"?"Die Cast Aluminium Housing / IP65 Rating / Powder Coated Finish":
+      ct==="batteries"?"Grade A Cell / BMS Protected / Maintenance Free / IP65 Enclosure":
+      ct==="panels"?"Monocrystalline / Aluminium Frame / 3.2mm Tempered Glass / IP67 Junction Box":
+      ct==="poles"?"Material: MS IS 2062 Gr.A / Hot Dip Galvanized / Foundation Bolt Set / As per IS:2713":
+      ct==="structures"?"MS Fabricated / Hot Dip Galvanized / Adjustable Tilt Angle / Nut Bolt Fasteners":
+      ct==="controllers"?"MPPT Technology / IP65 Rating / LCD Display / Overcharge Protection":"";
+    return`<div class="price-section">
+      <div class="cat-hdr" style="background:${col}">
+        <span>${CAT_ICO[ct]||""} ${CAT_LBL[ct]||ct} <span style="opacity:.65;font-size:12px">(${fitems.length} products)</span></span>
+        <button onclick="toggleAF('${ct}')" id="addBtn_${ct}" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer">＋ Add Product</button>
+      </div>
+
+      <!-- ADD FORM -->
+      <div id="af_${ct}" style="display:none">
+        <div class="add-card">
+          <div class="add-card-title">➕ Add New Product to ${CAT_LBL[ct]||ct}</div>
+          <div class="field-row" style="margin-bottom:8px">
+            <div class="f f-name"><label>PRODUCT NAME *</label><input id="al_${ct}" placeholder="e.g. LiFePO4 60Ah @ 3.2V" style="padding:9px 12px;border:1.5px solid #d0d9ee;border-radius:7px;font-size:14px"></div>
+            <div class="f f-rate"><label>RATE (₹) *</label><input type="number" id="ar_${ct}" placeholder="0" style="padding:9px 12px;border:1.5px solid #d0d9ee;border-radius:7px;font-size:14px"></div>
+            ${ct==="bodies"?`<div class="f f-maxw"><label>MAX WATTS</label><input type="number" id="aw_${ct}" placeholder="e.g. 80" style="padding:9px 12px;border:1.5px solid #d0d9ee;border-radius:7px;font-size:14px"></div>`:""}
+          </div>
+          <div style="margin-bottom:8px">
+            <div style="font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px;margin-bottom:4px">PRODUCT DESCRIPTION / SPECIFICATIONS</div>
+            <textarea id="ad_${ct}" rows="3" placeholder="${specDefault||'Enter product specifications, technical details, brand, standard, etc.'}" style="width:100%;padding:9px 12px;border:1.5px solid #d0d9ee;border-radius:7px;font-size:13px;font-family:inherit;resize:vertical;line-height:1.6"></textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="doAddP('${ct}')" style="background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;border:none;border-radius:7px;padding:10px 22px;font-weight:800;cursor:pointer;font-size:14px;flex:1">✔ Save Product</button>
+            <button onclick="toggleAF('${ct}')" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:7px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:14px">✕ Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT CARDS -->
+      <div class="prod-cards">
+        ${fitems.map((it,i)=>{
+          const desc=it.desc||(SPECS[ct]?.[it.id]||"");
+          const unitLabel=ct==="panels"?"per Panel":ct==="batteries"?"per Battery":ct==="poles"?"per Pole":ct==="structures"?"per Structure":"per Unit";
+          return`<div class="prod-card" style="position:relative" id="pc_${it.id}">
+            <div class="prod-card-num">${i+1}</div>
+
+            <!-- VIEW MODE -->
+            <div id="pview_${it.id}">
+              <div class="prod-card-header">
+                <div class="prod-card-name" style="padding-left:20px">${it.label}${it.maxW?` <span style="font-size:11px;color:#6b7280;font-weight:500">(Max ${it.maxW}W)</span>`:""}</div>
+                <div class="prod-card-price">${inr(it.rate)}<span style="font-size:10px;font-weight:500;color:#92400e;margin-left:4px">${unitLabel}</span></div>
+              </div>
+              ${desc?`<div class="prod-card-desc">📋 ${desc}</div>`:`<div class="prod-card-desc" style="color:#9ca3af;font-style:italic">No description added. Click ✏️ Edit to add specifications.</div>`}
+              <div class="prod-card-footer">
+                <button onclick="startPE('${it.id}','${ct}')" class="btn btn-navy btn-sm">✏️ Edit</button>
+                <button onclick="delP('${ct}','${it.id}')" class="btn btn-danger btn-sm">🗑 Delete</button>
+              </div>
+            </div>
+
+            <!-- EDIT MODE -->
+            <div id="pedit_${it.id}" style="display:none;padding:12px">
+              <div style="font-size:12px;font-weight:800;color:${col};letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">✏️ Editing Product</div>
+              <div class="field-row" style="margin-bottom:8px">
+                <div class="f f-name"><label>PRODUCT NAME</label><input id="el_${it.id}" value="${it.label.replace(/"/g,'&quot;').replace(/'/g,"&#39;")}" style="padding:9px 12px;border:1.5px solid ${col};border-radius:7px;font-size:14px"></div>
+                <div class="f f-rate"><label>RATE (₹)</label><input type="number" id="ev_${it.id}" value="${it.rate}" style="padding:9px 12px;border:1.5px solid ${col};border-radius:7px;font-size:14px"></div>
+                ${ct==="bodies"?`<div class="f f-maxw"><label>MAX WATTS</label><input type="number" id="ew_${it.id}" value="${it.maxW||""}" style="padding:9px 12px;border:1.5px solid ${col};border-radius:7px;font-size:14px"></div>`:""}
+              </div>
+              <div style="margin-bottom:8px">
+                <div style="font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px;margin-bottom:4px">PRODUCT DESCRIPTION / SPECIFICATIONS</div>
+                <textarea id="ed_${it.id}" rows="4" style="width:100%;padding:9px 12px;border:1.5px solid ${col};border-radius:7px;font-size:13px;font-family:inherit;resize:vertical;line-height:1.6">${(desc).replace(/</g,"&lt;")}</textarea>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button onclick="savePE('${ct}','${it.id}')" style="background:${col};color:#fff;border:none;border-radius:7px;padding:9px 20px;font-weight:800;cursor:pointer;font-size:14px;flex:1">✔ Save Changes</button>
+                <button onclick="cancelPE('${it.id}')" style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:7px;padding:9px 16px;font-weight:700;cursor:pointer">✕</button>
+              </div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+  }).join("");
+}
+function toggleAF(ct){const f=document.getElementById("af_"+ct);if(f)f.style.display=f.style.display==="none"?"":"none";}
+function doAddP(ct){
+  const l=document.getElementById("al_"+ct)?.value.trim();
+  const r=parseFloat(document.getElementById("ar_"+ct)?.value)||0;
+  const d=document.getElementById("ad_"+ct)?.value.trim()||"";
+  const mw=document.getElementById("aw_"+ct);
+  if(!l){alert("Product name is required!");return;}
+  prices[ct].push({id:uid(),label:l,rate:r,desc:d,maxW:mw?parseInt(mw.value)||undefined:undefined});
+  savePrices();
+  // Clear form
+  ["al_","ar_","ad_","aw_"].forEach(p=>{const e=document.getElementById(p+ct);if(e)e.value="";});
+  toggleAF(ct);
+  renderPList();
+  showMsg("pMsg","✅ Product added successfully!","msg-ok");
+}
+function delP(ct,id){
+  showConfirm(
+    "🗑 Delete Product?",
+    "This product will be permanently removed from the price master. This cannot be undone.",
+    ()=>{
+      prices[ct]=prices[ct].filter(x=>x.id!==id);
+      savePrices();renderPList();
+      showMsg("pMsg","🗑 Product deleted.","msg-ok");
+    }
+  );
+}
+function showConfirm(title,msg,onYes){
+  let ov=document.getElementById("confirmModal");
+  if(!ov){
+    ov=document.createElement("div");ov.id="confirmModal";ov.className="modal-overlay";
+    ov.innerHTML=`<div class="modal-box">
+      <div class="modal-title" id="cmTitle"></div>
+      <div class="modal-msg" id="cmMsg"></div>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="hideConfirm()">✕ Cancel</button>
+        <button class="modal-confirm" id="cmYes">🗑 Yes, Delete</button>
+      </div>
+    </div>`;
+    document.body.appendChild(ov);
+  }
+  document.getElementById("cmTitle").textContent=title;
+  document.getElementById("cmMsg").textContent=msg;
+  document.getElementById("cmYes").onclick=()=>{hideConfirm();onYes();};
+  ov.style.display="flex";
+}
+function hideConfirm(){const ov=document.getElementById("confirmModal");if(ov)ov.style.display="none";}
+function startPE(id,ct){
+  document.getElementById("pview_"+id).style.display="none";
+  document.getElementById("pedit_"+id).style.display="";
+  // pre-fill description from SPECS if empty
+  const descEl=document.getElementById("ed_"+id);
+  if(descEl&&!descEl.value.trim()){const sp=SPECS[ct]?.[id];if(sp)descEl.value=sp;}
+}
+function cancelPE(id){
+  document.getElementById("pview_"+id).style.display="";
+  document.getElementById("pedit_"+id).style.display="none";
+}
+function savePE(ct,id){
+  const nl=document.getElementById("el_"+id)?.value.trim();
+  const nr=parseFloat(document.getElementById("ev_"+id)?.value)||0;
+  const nd=document.getElementById("ed_"+id)?.value.trim()||"";
+  const nw=document.getElementById("ew_"+id);
+  const it=prices[ct].find(x=>x.id===id);
+  if(!it||!nl){alert("Product name cannot be empty!");return;}
+  it.label=nl;it.rate=nr;it.desc=nd;
+  if(nw)it.maxW=parseInt(nw.value)||undefined;
+  // Also update SPECS cache so spec box shows new description
+  if(!SPECS[ct])SPECS[ct]={};
+  SPECS[ct][id]=nd;
+  savePrices();
+  cancelPE(id);
+  renderPList();
+  showMsg("pMsg","✅ Product updated!","msg-ok");
+}
+function savePrices(){localStorage.setItem("ex_p",JSON.stringify(prices));}
+
+const CAT_COLOR_OPTIONS=["#1a3a7c","#15803d","#92400e","#5b21b6","#0e7490","#9a3412","#374151","#b91c1c","#0369a1","#7c3aed","#b45309","#0f766e"];
+const CAT_ICON_OPTIONS=["📦","🔩","🏭","💎","🛠","⚡","🔦","🌡","🏗","🔌","💡","🔋","☀️","🗼","⚙️","🎨","🪜","⚓","🔧"];
+
+function renderAddCatSection(){
+  const c=document.getElementById("addCatSection");if(!c)return;
+  const uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
+  c.innerHTML=`<div class="add-cat-form">
+    <div class="add-cat-title">📂 Add New Category</div>
+    <div class="field-row" style="margin-bottom:8px;flex-wrap:wrap">
+      <div class="f" style="flex:3;min-width:150px">
+        <label>CATEGORY NAME *</label>
+        <input id="newCatLabel" placeholder="e.g. Cables & Wiring" style="padding:9px 12px;border:1.5px solid #4ade80;border-radius:7px;font-size:14px">
+      </div>
+      <div class="f" style="flex:1;min-width:80px">
+        <label>KEY (no spaces)</label>
+        <input id="newCatKey" placeholder="cables" style="padding:9px 12px;border:1.5px solid #4ade80;border-radius:7px;font-size:14px">
+      </div>
+    </div>
+    <div class="field-row" style="margin-bottom:10px;flex-wrap:wrap">
+      <div class="f" style="flex:1;min-width:100px">
+        <label>ICON</label>
+        <select id="newCatIcon" style="padding:9px 12px;border:1.5px solid #4ade80;border-radius:7px;font-size:18px">
+          ${CAT_ICON_OPTIONS.map(i=>`<option value="${i}">${i}</option>`).join("")}
+        </select>
+      </div>
+      <div class="f" style="flex:1;min-width:120px">
+        <label>COLOR</label>
+        <select id="newCatColor" style="padding:9px 12px;border:1.5px solid #4ade80;border-radius:7px;font-size:13px">
+          ${CAT_COLOR_OPTIONS.map(c=>`<option value="${c}" style="background:${c};color:#fff">${c}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <button onclick="doAddCategory()" style="background:linear-gradient(135deg,#15803d,#166534);color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;cursor:pointer;font-size:14px;width:100%">✔ Create New Category</button>
+    <div id="newCatMsg" style="margin-top:6px"></div>
+    ${uc.length>0?`<div style="margin-top:10px;border-top:1px dashed #4ade80;padding-top:10px">
+      <div style="font-size:11px;font-weight:700;color:#15803d;letter-spacing:1px;margin-bottom:7px">YOUR CUSTOM CATEGORIES</div>
+      ${uc.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.6);border-radius:7px;padding:7px 10px;margin-bottom:5px">
+        <span style="font-weight:600;font-size:13px">${c.icon} ${c.label}</span>
+        <button onclick="deleteCategory('${c.key}')" style="background:rgba(220,38,38,.1);color:#dc2626;border:1px solid #fca5a5;border-radius:5px;padding:3px 9px;font-size:12px;cursor:pointer">🗑 Remove</button>
+      </div>`).join("")}
+    </div>`:""}
+  </div>`;
+}
+
+function doAddCategory(){
+  const label=document.getElementById("newCatLabel")?.value.trim();
+  let key=document.getElementById("newCatKey")?.value.trim().toLowerCase().replace(/[^a-z0-9_]/g,"");
+  const icon=document.getElementById("newCatIcon")?.value||"📦";
+  const color=document.getElementById("newCatColor")?.value||"#374151";
+  if(!label){showMsg("newCatMsg","❌ Category name is required!","msg-err");return;}
+  if(!key)key=label.toLowerCase().replace(/[^a-z0-9]/g,"_").slice(0,20);
+  if(CAT_LBL[key]){showMsg("newCatMsg","❌ Category key already exists! Try a different name.","msg-err");return;}
+  // Add to runtime metadata
+  CAT_CLR[key]=color;CAT_ICO[key]=icon;CAT_LBL[key]=label;
+  if(!prices[key])prices[key]=[];
+  // Save user categories to localStorage
+  const uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
+  uc.push({key,label,icon,color});
+  localStorage.setItem("ex_user_cats",JSON.stringify(uc));
+  savePrices();
+  showMsg("newCatMsg","✅ Category '"+label+"' created!","msg-ok");
+  document.getElementById("newCatLabel").value="";
+  document.getElementById("newCatKey").value="";
+  setTimeout(()=>{renderPricesTab();},700);
+}
+
+function deleteCategory(key){
+  showConfirm(
+    "🗑 Delete Category?",
+    "This will remove the category and ALL products in it. This cannot be undone.",
+    ()=>{
+      const uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]").filter(c=>c.key!==key);
+      localStorage.setItem("ex_user_cats",JSON.stringify(uc));
+      delete prices[key];delete CAT_CLR[key];delete CAT_ICO[key];delete CAT_LBL[key];
+      savePrices();renderPricesTab();
+      showMsg("pMsg","🗑 Category deleted.","msg-ok");
+    }
+  );
+}
+
+function renderCatSection(){
+  const c=document.getElementById("catSection");if(!c)return;
+  c.innerHTML=`<div class="price-section" style="margin-top:6px">
+    <div class="cat-hdr" style="background:#7c3aed">
+      <span>⚙️ Custom Product Catalog (${catalog.length})</span>
+      <button onclick="toggleCF()" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:5px;padding:3px 10px;font-size:12px;font-weight:700;cursor:pointer">＋ Add</button>
+    </div>
+    <div id="catAddForm" style="display:none"><div class="add-form">
+      <input id="cat_n" placeholder="Product / Service Name *">
+      <textarea id="cat_d" rows="3" style="font-size:13px;border:1px solid #d0d9ee;border-radius:6px;padding:8px" placeholder="Full description for quotation…"></textarea>
+      <div class="row2"><input id="cat_u" placeholder="Unit (Nos/Set/Kg…)" value="Nos"><input type="number" id="cat_r" placeholder="Default Rate (₹)"></div>
+      <button onclick="doAddCat()" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:9px;font-weight:800;cursor:pointer">✔ Add to Catalog</button>
+    </div></div>
+    <table class="ptbl">
+      <thead><tr><th>#</th><th>Product Name</th><th>Description</th><th style="text-align:right">Default Rate</th><th>Actions</th></tr></thead>
+      <tbody>${catalog.map((cp,i)=>`<tr id="cpr_${cp.id}">
+        <td style="color:#aaa">${i+1}</td>
+        <td style="min-width:120px"><span id="cpn_${cp.id}" style="font-weight:600">${cp.name}</span><input id="ecpn_${cp.id}" value="${cp.name.replace(/"/g,'&quot;')}" style="display:none;width:100%;padding:4px 6px;border:1px solid #b0c0e0;border-radius:4px;font-size:12px"></td>
+        <td style="max-width:180px"><span id="cpd_${cp.id}" style="font-size:11px;color:#666;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${cp.desc}</span><textarea id="ecpd_${cp.id}" rows="2" style="display:none;width:100%;padding:4px 6px;border:1px solid #b0c0e0;border-radius:4px;font-size:11px;font-family:inherit">${cp.desc}</textarea></td>
+        <td style="text-align:right;font-weight:700;color:#7c3aed;white-space:nowrap"><span id="cpr2_${cp.id}">${inr(cp.rate||0)}</span><input type="number" id="ecpr_${cp.id}" value="${cp.rate||0}" style="display:none;width:80px;padding:4px 6px;border:1px solid #b0c0e0;border-radius:4px;font-size:12px;text-align:right"></td>
+        <td style="white-space:nowrap">
+          <span id="cpvb_${cp.id}"><button onclick="startCE('${cp.id}')" style="background:rgba(124,58,237,.1);color:#7c3aed;border:1px solid #c084fc;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer;margin-right:3px">✏️</button><button onclick="delCat('${cp.id}')" style="background:rgba(220,38,38,.1);color:#dc2626;border:1px solid #fca5a5;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer">🗑</button></span>
+          <span id="cpeb_${cp.id}" style="display:none"><button onclick="saveCE('${cp.id}')" style="background:#7c3aed;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;margin-right:3px">✔</button><button onclick="cancelCE('${cp.id}')" style="background:#888;color:#fff;border:none;border-radius:4px;padding:3px 7px;font-size:11px;cursor:pointer">✕</button></span>
+        </td>
+      </tr>`).join("")}</tbody>
+    </table>
+  </div>`;
+}
+function toggleCF(){const f=document.getElementById("catAddForm");if(f)f.style.display=f.style.display==="none"?"":"none";}
+function doAddCat(){const n=document.getElementById("cat_n")?.value.trim();const d=document.getElementById("cat_d")?.value.trim();const u=document.getElementById("cat_u")?.value.trim()||"Nos";const r=parseFloat(document.getElementById("cat_r")?.value)||0;if(!n)return;catalog.push({id:uid(),name:n,desc:d,unit:u,rate:r});saveCatalog();renderCatSection();["cat_n","cat_d","cat_r"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});}
+function delCat(id){showConfirm("🗑 Remove Product?","Remove this product from the custom catalog?",()=>{catalog=catalog.filter(x=>x.id!==id);saveCatalog();renderCatSection();});}
+function startCE(id){["cpn_","cpd_","cpr2_"].forEach(p=>{const e=document.getElementById(p+id);if(e)e.style.display="none";});["ecpn_","ecpd_","ecpr_"].forEach(p=>{const e=document.getElementById(p+id);if(e)e.style.display="";});document.getElementById("cpvb_"+id).style.display="none";document.getElementById("cpeb_"+id).style.display="";}
+function cancelCE(id){["cpn_","cpd_","cpr2_"].forEach(p=>{const e=document.getElementById(p+id);if(e)e.style.display="";});["ecpn_","ecpd_","ecpr_"].forEach(p=>{const e=document.getElementById(p+id);if(e)e.style.display="none";});document.getElementById("cpvb_"+id).style.display="";document.getElementById("cpeb_"+id).style.display="none";}
+function saveCE(id){const cp=catalog.find(x=>x.id===id);if(!cp)return;cp.name=document.getElementById("ecpn_"+id)?.value||cp.name;cp.desc=document.getElementById("ecpd_"+id)?.value||cp.desc;cp.rate=parseFloat(document.getElementById("ecpr_"+id)?.value)||0;saveCatalog();renderCatSection();}
+function saveCatalog(){localStorage.setItem("ex_c",JSON.stringify(catalog));}
+
+// ═══ HISTORY ═══
+function saveQuote(){
+  const t=getTotals();
+  const snap={id:uid(),savedAt:Date.now(),quoteNo:V("quoteNo"),quoteDate:V("quoteDate"),validDate:V("validDate"),docType:V("docType"),remarks:V("remarks"),gMargin,quoteTransport:{...quoteTransport},client:{name:V("cName"),addr:V("cAddr"),city:V("cCity"),contact:V("cContact"),person:V("cPerson"),gstin:V("cGstin")},items:JSON.parse(JSON.stringify(items)),totals:t};
+  const all=JSON.parse(localStorage.getItem("ex_h")||"[]");all.unshift(snap);if(all.length>60)all.length=60;
+  localStorage.setItem("ex_h",JSON.stringify(all));
+  showMsg("quoteMsg","✅ Saved!","msg-ok");
+}
+function renderHistoryTab(){
+  const all=JSON.parse(localStorage.getItem("ex_h")||"[]");
+  const t=document.getElementById("tab-history");
+  if(!all.length){t.innerHTML=`<div class="card empty"><i>🗂</i>No saved quotations yet.<br>Build one and click 💾 Save.</div>`;return;}
+  t.innerHTML=`<div class="card" style="display:flex;justify-content:space-between;align-items:center"><b style="color:var(--blue)">🗂 ${all.length} Saved Quotations</b></div>`
+    +all.map(s=>{const d=new Date(s.savedAt);return`<div class="hist-item">
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:14px;color:var(--blue)">${s.quoteNo||"—"}</div>
+        <div style="font-size:12px;color:#555;margin-top:2px">${s.client?.name||"—"}${s.client?.city?", "+s.client.city:""}</div>
+        <div style="font-size:11px;color:#aaa;margin-top:2px">${d.toLocaleDateString("en-IN")} ${d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}</div>
+        <div style="display:flex;gap:7px;margin-top:7px">
+          <button class="btn btn-navy btn-sm" onclick="loadQ('${s.id}')">📂 Load</button>
+          <button class="btn btn-danger btn-sm" onclick="delH('${s.id}')">🗑</button>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:800;font-size:15px;color:var(--blue)">${inr(s.totals?.grand||0)}</div>
+        <div style="font-size:11px;color:#aaa">${s.items?.length||0} items</div>
+      </div>
+    </div>`;}).join("");
+}
+function loadQ(id){const all=JSON.parse(localStorage.getItem("ex_h")||"[]");const s=all.find(x=>x.id===id);if(!s)return;items=s.items||[];gMargin=s.gMargin||30;showTab("quote");setTimeout(()=>{setV("quoteNo",s.quoteNo||"");setV("quoteDate",s.quoteDate||"");setV("validDate",s.validDate||"");setV("docType",s.docType||"Quotation");setV("remarks",s.remarks||"");setV("cName",s.client?.name||"");setV("cAddr",s.client?.addr||"");setV("cCity",s.client?.city||"");setV("cContact",s.client?.contact||"");setV("cPerson",s.client?.person||"");setV("cGstin",s.client?.gstin||"");syncGM(gMargin);renderItems();},60);}
+function delH(id){const all=JSON.parse(localStorage.getItem("ex_h")||"[]").filter(x=>x.id!==id);localStorage.setItem("ex_h",JSON.stringify(all));renderHistoryTab();}
+
+// ═══ PREVIEW ═══
+function renderPreview(){
+  const t=document.getElementById("tab-preview");const tot=getTotals();
+  const qno=V("quoteNo"),qd=V("quoteDate"),vd=V("validDate"),dt=V("docType"),rem=V("remarks");
+  const cn=V("cName"),ca=V("cAddr"),cc=V("cCity"),cg=V("cGstin"),cp=V("cPerson"),cco=V("cContact");
+  const rows=items.map((it,i)=>{
+    const c=calcItem(it);
+    const baseDesc=it.description||buildAutoDesc(it);
+    const discNote=(it.custom&&(parseFloat(it.discount)||0)>0)?` [Discount: ${it.discount}% applied]`:"";
+    const desc=baseDesc+discNote;
+    return`<tr><td>${i+1}</td><td style="line-height:1.5">${desc}</td><td style="text-align:right">${c.qty}</td><td style="text-align:right">${inr(c.unit)}</td><td style="text-align:right">${it.gstPct||0}%</td><td style="text-align:right">${inr(c.gst)}</td><td style="text-align:right;font-weight:600">${inr(c.total)}</td></tr>`;
+  }).join("");
+  t.innerHTML=`
+    <div class="card" id="noprint" style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="btn btn-pdf" onclick="downloadPDF()">📥 PDF</button>
+      <button class="btn btn-wa" onclick="shareWA()">📱 WhatsApp</button>
+      <button class="btn btn-green" onclick="saveQuote()">💾 Save</button>
+      <button class="btn btn-navy btn-sm" onclick="showTab('quote')">✏️ Edit</button>
+    </div>
+    <div id="pdfMsg"></div>
+    <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.08)">
+      <div id="quote-doc">
+        <div class="doc-hdr">
+          <div>
+            <div class="doc-co">ENTRIX INNOVATION</div>
+            <div class="doc-addr">${CO.addr}<br>GSTIN: ${CO.gstin} | State: ${CO.state}<br>📧 ${CO.email} | 🌐 ${CO.web}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="doc-badge">${dt.toUpperCase()}</div>
+            <div style="font-size:11px;margin-top:3px"><b>No:</b> ${qno}</div>
+            <div style="font-size:11px"><b>Date:</b> ${dateStr(qd)}</div>
+            <div style="font-size:11px"><b>Valid:</b> ${dateStr(vd)}</div>
+          </div>
+        </div>
+        <div class="client-box">
+          <div style="font-size:10px;font-weight:800;color:#1a3a7c;letter-spacing:1px;margin-bottom:3px">INVOICE TO</div>
+          <b>${cn||"—"}</b>${ca?`<br>${ca}`:""}${cc?`<br>${cc}`:""}${cg?`<br>GSTIN: ${cg}`:""}${cp?`<br>Contact: ${cp}`:""}${cco?`<br>Ph/Email: ${cco}`:""}
+        </div>
+        <table class="itbl">
+          <thead><tr><th>Sr.</th><th>Item Description</th><th style="text-align:right">Qty</th><th style="text-align:right">Unit Rate</th><th style="text-align:right">GST%</th><th style="text-align:right">GST Amt</th><th style="text-align:right">Total (₹)</th></tr></thead>
+          <tbody>${rows}${tot.transAmt>0?`<tr><td></td><td>Transport Charges</td><td style="text-align:right">1</td><td style="text-align:right">${inr(tot.transAmt)}</td><td style="text-align:right">${quoteTransport.gstPct}%</td><td style="text-align:right">${inr(tot.transGst)}</td><td style="text-align:right;font-weight:600">${inr(tot.trans)}</td></tr>`:""}</tbody>
+        </table>
+        <div class="totdoc">
+          <div class="totdoc-row"><span>Sub-Total (Before Tax):</span><b>${inr(tot.sub)}</b></div>
+          <div class="totdoc-row"><span>Total GST:</span><b>${inr(tot.gst)}</b></div>
+          ${tot.transAmt>0?`<div class="totdoc-row"><span>Transport (incl. ${quoteTransport.gstPct}% GST):</span><b>${inr(tot.trans)}</b></div>`:""}
+          <div class="totdoc-grand"><span>GRAND TOTAL:</span><span>${inr(tot.grand)}</span></div>
+          <div style="font-size:10px;color:#666;font-style:italic;margin-top:3px">${amtWords(tot.grand)}</div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="terms-box">
+          <b style="color:#0a1f4e;font-size:11px">TERMS & CONDITIONS</b><br>
+          1. Payment: 50% Advance, balance 50% before dispatch. &nbsp; 4. All prices are exclusive of GST unless stated.<br>
+          2. Delivery: 7–10 working days after receipt of advance. &nbsp; 5. Warranty as per manufacturer's standard terms.<br>
+          3. Validity: 15 days from date of quotation. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6. Disputes subject to Nagpur jurisdiction only.
+          ${rem?`<br><b>Remarks:</b> ${rem}`:""}
+        </div>
+        <div class="bank-grid">
+          <div><b style="color:#0a1f4e;font-size:11px">BANK DETAILS</b><br>
+            ${CO.b1.n} | A/C: ${CO.b1.ac} | ${CO.b1.br} – ${CO.b1.ifsc}<br>
+            ${CO.b2.n} | A/C: ${CO.b2.ac} | ${CO.b2.br} – ${CO.b2.ifsc}<br>
+          </div>
+          <div style="text-align:right;display:flex;flex-direction:column;justify-content:flex-end">
+            <div style="color:#0a1f4e;font-weight:800;font-size:11px;margin-bottom:26px">AUTHORISED SIGNATORY</div>
+            <div style="border-top:1px solid #0a1f4e;padding-top:4px;font-size:11px">For <b>ENTRIX INNOVATION</b></div>
+          </div>
+        </div>
+        <div class="footer-bar">Thank you for your business! ● ${CO.web} ● ${CO.email}</div>
+      </div>
+    </div>`;
+}
+
+// ═══ SETTINGS ═══
+// ── EXPORT APP WITH UPDATED PRICES ──
+function exportAppWithPrices(){
+  var btn=document.getElementById("exportBtn");
+  if(btn){btn.disabled=true;btn.textContent="⏳ Encoding...";}
+  setTimeout(function(){
+    try{
+      var data={
+        p:prices,
+        c:catalog,
+        u:JSON.parse(localStorage.getItem("ex_user_cats")||"[]"),
+        pin:adminPin,
+        m:gMargin,
+        v:APP_VERSION,
+        t:Date.now()
+      };
+      var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+      var msgEl=document.getElementById("exportMsg");
+      if(msgEl){
+        msgEl.innerHTML=''
+          +'<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:14px;margin-top:8px">'
+          +'<div style="font-weight:800;color:#14532d;font-size:14px;margin-bottom:6px">✅ Price Data Ready to Share!</div>'
+          +'<div style="font-size:12px;color:#166534;margin-bottom:8px">Two ways to share with your team:</div>'
+
+          +'<div style="background:#fff;border:1px solid #34d399;border-radius:8px;padding:10px;margin-bottom:10px">'
+          +'<div style="font-weight:700;color:#14532d;font-size:12px;margin-bottom:6px">📱 Option 1 — Share via WhatsApp (Easiest)</div>'
+          +'<button class="wa-share-btn" onclick="shareCodeWA()" style="font-size:14px;padding:11px">'
+          +'📲 Send Price Code on WhatsApp</button>'
+          +'</div>'
+
+          +'<div style="background:#fff;border:1px solid #34d399;border-radius:8px;padding:10px">'
+          +'<div style="font-weight:700;color:#14532d;font-size:12px;margin-bottom:6px">📋 Option 2 — Copy Code Manually</div>'
+          +'<div class="data-code-box" id="exportCodeBox" onclick="selectExportCode()">'+encoded+'</div>'
+          +'<button onclick="copyExportCode()" style="background:#15803d;color:#fff;border:none;border-radius:7px;padding:10px;font-weight:700;width:100%;cursor:pointer;font-size:13px">📋 Copy Code to Clipboard</button>'
+          +'<div id="copyCodeMsg" style="text-align:center;font-size:12px;color:#166534;margin-top:4px"></div>'
+          +'</div>'
+
+          +'<div style="margin-top:10px;background:#fef9c3;border:1px solid #fbbf24;border-radius:8px;padding:9px;font-size:11px;color:#713f12;line-height:1.7">'
+          +'<b>Team Member Instructions:</b><br>'
+          +'Open app → ⚙️ Settings → Scroll down → <b>Import Price Code</b> → Paste code → Tap Import ✅'
+          +'</div>'
+          +'</div>';
+      }
+      // Store encoded for WA share
+      window._exportCode=encoded;
+    }catch(err){
+      showMsg("exportMsg","❌ "+err.message,"msg-err");
+    }
+    if(btn){btn.disabled=false;btn.textContent="📤 Export & Share Prices";}
+  },150);
+}
+
+function selectExportCode(){
+  var el=document.getElementById("exportCodeBox");
+  if(!el)return;
+  if(window.getSelection){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);}
+}
+
+function copyExportCode(){
+  var el=document.getElementById("exportCodeBox");
+  if(!el)return;
+  var text=el.textContent||el.innerText;
+  var msg=document.getElementById("copyCodeMsg");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      if(msg){msg.textContent="✅ Copied! Now paste it in WhatsApp.";setTimeout(function(){if(msg)msg.textContent="";},3000);}
+    }).catch(function(){fallbackCopy(text,msg);});
+  }else{fallbackCopy(text,msg);}
+}
+
+function fallbackCopy(text,msg){
+  var ta=document.createElement("textarea");
+  ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand("copy");if(msg){msg.textContent="✅ Copied!";setTimeout(function(){if(msg)msg.textContent="";},3000);}}
+  catch(e){if(msg)msg.textContent="❌ Copy failed — tap the code box and copy manually";}
+  document.body.removeChild(ta);
+}
+
+function shareCodeWA(){
+  var code=window._exportCode||"";
+  if(!code){showMsg("exportMsg","❌ Please tap Export first","msg-err");return;}
+  var nl="\n";
+  var msg="*ENTRIX App Price Update*"+nl+nl
+    +"Admin has updated the product prices."+nl+nl
+    +"To import: Open app > Settings > Import Price Code > Paste code > Tap Import"+nl+nl
+    +"*PRICE CODE:*"+nl+code+nl+nl
+    +"_ENTRIX INNOVATION_";
+  window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+}
+
+function importPriceCode(){
+  var ta=document.getElementById("importCodeTA");
+  if(!ta||!ta.value.trim()){showMsg("importMsg","❌ Please paste the price code first","msg-err");return;}
+  try{
+    var decoded=JSON.parse(decodeURIComponent(escape(atob(ta.value.trim()))));
+    if(decoded.p)prices=decoded.p;
+    if(decoded.c)catalog=decoded.c;
+    if(decoded.u)localStorage.setItem("ex_user_cats",JSON.stringify(decoded.u));
+    if(decoded.pin)adminPin=decoded.pin;
+    if(decoded.m!=null)gMargin=decoded.m;
+    localStorage.setItem("ex_p",JSON.stringify(prices));
+    localStorage.setItem("ex_c",JSON.stringify(catalog));
+    localStorage.setItem("ex_pin",adminPin);
+    localStorage.setItem("ex_m",String(gMargin));
+    ta.value="";
+    showMsg("importMsg","✅ Prices imported successfully! All products updated.","msg-ok");
+    // Reload user cats
+    var uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
+    uc.forEach(function(c){CAT_CLR[c.key]=c.color;CAT_ICO[c.key]=c.icon;CAT_LBL[c.key]=c.label;if(!prices[c.key])prices[c.key]=[];});
+  }catch(e){
+    showMsg("importMsg","❌ Invalid code. Ask admin to resend the price code.","msg-err");
+  }
+}
+
+
+function renderSettingsTab(){
+  document.getElementById("tab-settings").innerHTML=`
+    <!-- EXPORT SECTION -->
+    <div class="export-section">
+      <div class="export-title">📤 Share Updated Prices with Team</div>
+      <div class="export-desc">Tap the button → get a <b>Price Code</b> → send on WhatsApp → team imports it instantly. No file download needed!</div>
+      <button class="btn btn-green btn-full" id="exportBtn" onclick="exportAppWithPrices()" style="font-size:15px;padding:14px">
+        📤 Export &amp; Share Prices
+      </button>
+      <div id="exportMsg" style="margin-top:8px"></div>
+    </div>
+
+    <!-- IMPORT SECTION (shown to all users) -->
+    <div class="import-section">
+      <div class="import-title">📥 Import Price Code from Admin</div>
+      <div style="font-size:12px;color:#1e40af;margin-bottom:8px">Paste the price code received from Admin on WhatsApp here:</div>
+      <textarea class="import-textarea" id="importCodeTA" placeholder="Paste price code here..."></textarea>
+      <button class="btn btn-navy btn-full" style="margin-top:8px;font-size:15px;padding:13px" onclick="importPriceCode()">📥 Import & Apply Prices</button>
+      <div id="importMsg" style="margin-top:6px"></div>
+    </div>
+
+    <div class="set-section">
+      <div class="set-title">🔐 Change Admin Password</div>
+      <label>Current Password</label><input type="password" id="curPwd" placeholder="Current password">
+      <label>New Password</label><input type="password" id="newPwd" placeholder="New password (min 4 chars)">
+      <label>Confirm New Password</label><input type="password" id="cfmPwd" placeholder="Confirm">
+      <button class="btn btn-navy btn-full" style="margin-top:10px" onclick="changePwd()">🔒 Change Password</button>
+      <div id="pwdMsg"></div>
+    </div>
+    <div class="set-section">
+      <div class="set-title">🎯 Default Profit Margin</div>
+      <div class="mb-row">
+        <input type="range" min="0" max="100" id="defMSlider" value="${gMargin}" oninput="syncGM(this.value)">
+        <input type="number" class="mb-num" id="defMNum" value="${gMargin}" oninput="syncGM(this.value)">
+        <span style="font-weight:700;color:#8a5a00">%</span>
+      </div>
+      <button class="btn btn-gold btn-full" style="margin-top:10px" onclick="applyGM();showMsg('setMsg','✅ Applied to all items!','msg-ok')">⚡ Apply to All Items</button>
+      <div id="setMsg"></div>
+    </div>
+    <div class="card">
+      <div class="ct">🗄 Reset Data</div>
+      <button class="btn btn-danger btn-full" onclick="resetAll()">🔄 Reset All Prices to Factory Default</button>
+      <hr style="border:none;border-top:1px solid #dce5f5;margin:14px 0">
+      <div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:12px;font-size:13px;color:#1e40af">
+        <b style="display:block;margin-bottom:6px">📱 App Not Updating? Force Refresh:</b>
+        <div style="line-height:1.8">
+          <b>Android Chrome:</b> Tap ⋮ menu → <b>Reload</b> (or hold Reload icon)<br>
+          <b>iPhone Safari:</b> Hold the Refresh ↺ button → <b>Reload Without Content Blockers</b><br>
+          <b>Desktop Chrome:</b> Press <b>Ctrl+Shift+R</b> (Windows) or <b>Cmd+Shift+R</b> (Mac)
+        </div>
+        <button class="btn btn-navy btn-full" style="margin-top:10px" onclick="hardRefresh()">🔄 Force Reload App Now</button>
+      </div>
+      <div id="resetMsg"></div>
+    </div>`;
+}
+function changePwd(){const c=document.getElementById("curPwd").value,n=document.getElementById("newPwd").value,f=document.getElementById("cfmPwd").value;if(c!==adminPin){showMsg("pwdMsg","❌ Current password wrong","msg-err");return;}if(!n||n.length<4){showMsg("pwdMsg","❌ Minimum 4 characters","msg-err");return;}if(n!==f){showMsg("pwdMsg","❌ Passwords don't match","msg-err");return;}adminPin=n;localStorage.setItem("ex_pin",adminPin);showMsg("pwdMsg","✅ Password changed!","msg-ok");document.getElementById("curPwd").value="";document.getElementById("newPwd").value="";document.getElementById("cfmPwd").value="";}
+function resetAll(){if(!confirm("Reset ALL prices and catalog to factory default?"))return;prices=JSON.parse(JSON.stringify(DP));catalog=JSON.parse(JSON.stringify(DC));savePrices();saveCatalog();showMsg("resetMsg","✅ Reset done!","msg-ok");}
+
+// ═══ PDF / WHATSAPP ═══
+function downloadPDF(){renderPreview();showTab("preview");setTimeout(()=>window.print(),300);showMsg("pdfMsg","ℹ️ In dialog → select 'Save as PDF'","msg-info");}
+
+// ── WA overlay helpers ──
+function showWAOverlay(title,sub,pct){
+  let ov=document.getElementById("waOverlay");
+  if(!ov){
+    ov=document.createElement("div");ov.id="waOverlay";ov.className="wa-overlay";
+    ov.innerHTML=`<div class="wa-spinner"></div><div class="wa-status-title" id="waTitle"></div><div class="wa-status-sub" id="waSub"></div><div class="wa-progress"><div class="wa-progress-bar" id="waBar"></div></div>`;
+    document.body.appendChild(ov);
+  }
+  ov.style.display="flex";
+  document.getElementById("waTitle").textContent=title;
+  document.getElementById("waSub").textContent=sub;
+  document.getElementById("waBar").style.width=(pct||0)+"%";
+}
+function hideWAOverlay(){const ov=document.getElementById("waOverlay");if(ov)ov.style.display="none";}
+
+async function shareWA(){
+  const t=getTotals();
+  const qno=V("quoteNo")||"ENTRIX-Quote";
+
+  // Build WhatsApp text message
+  const lines=[
+    `*${V("docType").toUpperCase()} — ENTRIX INNOVATION*`,
+    `📋 ${V("quoteNo")} | Date: ${dateStr(V("quoteDate"))}`,
+    `👤 To: ${V("cName")||"Client"}${V("cCity")?", "+V("cCity"):""}`,
+    ``,`*ITEMS:*`,
+    ...items.map((it,i)=>{const c=calcItem(it);const nm=it.custom?(it.customName||"Custom Item"):`${it.wattage?it.wattage+"W ":""}${it.type}`;return`${i+1}. ${nm} × ${c.qty} — *${inr(c.total)}* (GST ${it.gstPct||0}%)`;}),
+    ``,`*Grand Total: ${inr(t.grand)}*`,`_(${amtWords(t.grand)})_`,
+    ``,`📄 PDF quotation attached below`,`📞 ${CO.email}`,`🌐 ${CO.web}`
+  ];
+  const waText=lines.join("\n");
+
+  // Check if html2canvas and jsPDF loaded
+  if(typeof html2canvas==="undefined"||typeof window.jspdf==="undefined"){
+    // Fallback: just open WhatsApp with text
+    window.open("https://wa.me/?text="+encodeURIComponent(waText),"_blank");
+    showMsg("quoteMsg","✅ Opening WhatsApp (PDF library not loaded)","msg-ok");
+    return;
+  }
+
+  try{
+    showWAOverlay("📄 Generating PDF…","Rendering quotation…",10);
+
+    // Render preview first
+    renderPreview();
+    await new Promise(r=>setTimeout(r,400));
+
+    const docEl=document.getElementById("quote-doc");
+    if(!docEl){hideWAOverlay();showMsg("quoteMsg","❌ Preview not found — open Preview tab first","msg-err");return;}
+
+    showWAOverlay("📄 Generating PDF…","Capturing quotation layout…",30);
+
+    // Capture with html2canvas
+    const canvas=await html2canvas(docEl,{
+      scale:2,useCORS:true,allowTaint:true,
+      backgroundColor:"#ffffff",
+      logging:false,
+      windowWidth:900
+    });
+
+    showWAOverlay("📄 Generating PDF…","Building PDF file…",60);
+
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    const imgW=210;
+    const imgH=(canvas.height*imgW)/canvas.width;
+    const pageH=297;
+
+    if(imgH<=pageH){
+      pdf.addImage(canvas.toDataURL("image/jpeg",0.92),"JPEG",0,0,imgW,imgH);
+    } else {
+      // Multi-page
+      let yOffset=0;
+      while(yOffset<imgH){
+        const srcY=(yOffset/imgH)*canvas.height;
+        const srcH=Math.min((pageH/imgH)*canvas.height,canvas.height-srcY);
+        const pageCanvas=document.createElement("canvas");
+        pageCanvas.width=canvas.width;
+        pageCanvas.height=srcH;
+        pageCanvas.getContext("2d").drawImage(canvas,0,srcY,canvas.width,srcH,0,0,canvas.width,srcH);
+        if(yOffset>0)pdf.addPage();
+        const sliceH=Math.min(pageH,imgH-yOffset);
+        pdf.addImage(pageCanvas.toDataURL("image/jpeg",0.92),"JPEG",0,0,imgW,sliceH);
+        yOffset+=pageH;
+      }
+    }
+
+    const pdfBlob=pdf.output("blob");
+    const fileName=(qno.split("/").join("-"))+"_ENTRIX.pdf";
+    const pdfFile=new File([pdfBlob],fileName,{type:"application/pdf"});
+
+    showWAOverlay("📱 Opening WhatsApp…","Sharing PDF…",85);
+    await new Promise(r=>setTimeout(r,300));
+
+    // Try Web Share API (works on Android Chrome & iOS Safari)
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[pdfFile]})){
+      await navigator.share({
+        title:`Quotation ${qno} — ENTRIX INNOVATION`,
+        text:waText,
+        files:[pdfFile]
+      });
+      hideWAOverlay();
+      showMsg("quoteMsg","✅ PDF shared via WhatsApp!","msg-ok");
+    } else {
+      // Fallback: download PDF + open WhatsApp text
+      hideWAOverlay();
+      showWAOverlay("📥 Downloading PDF…","PDF saved to your device\nNow opening WhatsApp — attach the PDF manually",90);
+      const url=URL.createObjectURL(pdfBlob);
+      const a=document.createElement("a");a.href=url;a.download=fileName;a.click();
+      URL.revokeObjectURL(url);
+      await new Promise(r=>setTimeout(r,1200));
+      hideWAOverlay();
+      window.open("https://wa.me/?text="+encodeURIComponent(waText),"_blank");
+      showMsg("quoteMsg","✅ PDF downloaded + WhatsApp opened — attach the PDF!","msg-ok");
+    }
+  }catch(err){
+    hideWAOverlay();
+    if(err.name==="AbortError"){showMsg("quoteMsg","ℹ️ Share cancelled","msg-info");return;}
+    console.error("WA share error:",err);
+    // Final fallback
+    window.open("https://wa.me/?text="+encodeURIComponent(waText),"_blank");
+    showMsg("quoteMsg","✅ WhatsApp opened (text only)","msg-ok");
+  }
+}
+
+// ═══ VERSION & CACHE CHECK ═══
+const APP_VERSION = "v2.0525.1754";
+
+function checkVersion(){
+  const stored = localStorage.getItem("ex_app_version");
+  if(stored && stored !== APP_VERSION){
+    // New version detected — show update bar
+    const bar = document.createElement("div");
+    bar.className = "update-notice";
+    bar.id = "updateBar";
+    bar.innerHTML = `⚡ New version loaded (v2.0525.1754). Old version was ${stored}. &nbsp;<button onclick="hardRefresh()">🔄 Reload Now</button><button onclick="dismissUpdate()" style="background:rgba(0,0,0,.2);color:#fff;margin-left:6px">✕</button>`;
+    document.body.appendChild(bar);
+  }
+  localStorage.setItem("ex_app_version", APP_VERSION);
+}
+
+function hardRefresh(){
+  // Clear all caches and reload
+  if('caches' in window){
+    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+  }
+  // Force reload bypassing cache
+  window.location.reload(true);
+}
+
+function dismissUpdate(){
+  const bar = document.getElementById("updateBar");
+  if(bar) bar.remove();
+}
+
+// Force browser to always read fresh file (no cache)
+(function(){
+  const html = document.querySelector("html");
+  if(html) html.setAttribute("data-version", APP_VERSION);
+})();
+
+// ═══ INIT ═══
+// Load user-added categories AFTER prices is initialized
+(function loadUserCats(){
+  const uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
+  uc.forEach(c=>{CAT_CLR[c.key]=c.color;CAT_ICO[c.key]=c.icon;CAT_LBL[c.key]=c.label;if(!prices[c.key])prices[c.key]=[];});
+})();
+checkVersion();
+pickRole("admin");
+</script>
+</body>
+</html>
