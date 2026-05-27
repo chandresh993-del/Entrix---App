@@ -252,6 +252,15 @@ textarea{resize:vertical}
 .add-cat-form{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px dashed #4ade80;border-radius:10px;padding:14px;margin:0 0 14px}
 .add-cat-title{font-weight:800;color:#15803d;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 
+/* PWA Install Banner */
+.pwa-banner{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#0a1f4e,#1a3a7c);color:#fff;padding:14px 16px;z-index:9997;display:flex;align-items:center;gap:12px;box-shadow:0 -4px 20px rgba(0,0,0,.3);border-top:2px solid #e8a020}
+.pwa-logo{width:44px;height:44px;min-width:44px;background:#e8a020;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:#0a1f4e}
+.pwa-text{flex:1}
+.pwa-title{font-weight:800;font-size:14px;margin-bottom:2px}
+.pwa-sub{font-size:11px;color:#8eb4ff}
+.pwa-install-btn{background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;border:none;border-radius:8px;padding:9px 16px;font-weight:800;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.pwa-dismiss{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:9px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+
 /* Update notice */
 .update-notice{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:9998;font-weight:700;font-size:13px;box-shadow:0 -3px 12px rgba(0,0,0,.2)}
 .update-notice button{background:#0a1f4e;color:#e8a020;border:none;border-radius:6px;padding:6px 14px;font-weight:800;cursor:pointer;font-size:12px}
@@ -399,6 +408,7 @@ const SPECS = {
 // ═══════════════════════════════════════════════════
 // PRICE MASTER DATA
 // ═══════════════════════════════════════════════════
+//<<DP_START>>
 const DP = {
   bodies:[
     {id:"SL_Lens_30W",label:"SL Lense Body (Max 30W)",rate:700,maxW:30},
@@ -484,7 +494,9 @@ const DP = {
     {id:"PAINTING_EPOXY",label:"Epoxy/PU Painting (per coat)",rate:180,desc:"Epoxy / PU Painting / Surface Preparation by Grinding / Red Oxide Primer Coat / Final Finish Coat / Per Sq.m Rate / Shade as per Client Requirement"},
   ],
 };
+//<<DP_END>>
 
+//<<DC_START>>
 const DC = [
   {id:"cp01",name:"Solar Street Light — Complete System",unit:"Nos",rate:8500,
    desc:"Semi-Integrated Solar Street Light / Brand: ENTRIX / OSRAM LED Body / Li-FePO4 Lithium Battery / Monocrystalline Solar Panel / MPPT Controller / Hot Dip GI Pole / Solar Panel Structure / Light Arm / Foundation Bolt / Nut Bolt / Commissioning / Warranty: 1 Year"},
@@ -517,6 +529,7 @@ const DC = [
   {id:"cp15",name:"Transport & Loading / Unloading",unit:"Trip",rate:2500,
    desc:"Transportation Charges / Loading & Unloading / From Factory (Kamptee, Nagpur) to Site / Open Truck / As per Actual Distance / Risk after Delivery at Client's Responsibility"},
 ];
+//<<DC_END>>
 
 const DREC = {
   "4stage":{12:"24A_3.2V",20:"48A_3.2V",30:"48A_3.2V",40:"72A_3.2V",50:"72A_3.2V",60:"96A_3.2V",80:"120A_3.2V",100:"144A_3.2V"},
@@ -1571,52 +1584,119 @@ function renderPreview(){
 // ── EXPORT APP WITH UPDATED PRICES ──
 function exportAppWithPrices(){
   var btn=document.getElementById("exportBtn");
-  if(btn){btn.disabled=true;btn.textContent="⏳ Encoding...";}
+  if(btn){btn.disabled=true;btn.textContent="⏳ Building...";}
+  var msgEl=document.getElementById("exportMsg");
+  if(msgEl)msgEl.innerHTML="";
+
   setTimeout(function(){
     try{
-      var data={
-        p:prices,
-        c:catalog,
-        u:JSON.parse(localStorage.getItem("ex_user_cats")||"[]"),
-        pin:adminPin,
-        m:gMargin,
-        v:APP_VERSION,
-        t:Date.now()
-      };
-      var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-      var msgEl=document.getElementById("exportMsg");
-      if(msgEl){
-        msgEl.innerHTML=''
-          +'<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:14px;margin-top:8px">'
-          +'<div style="font-weight:800;color:#14532d;font-size:14px;margin-bottom:6px">✅ Price Data Ready to Share!</div>'
-          +'<div style="font-size:12px;color:#166534;margin-bottom:8px">Two ways to share with your team:</div>'
+      // ── Get current HTML ──
+      var html=document.documentElement.outerHTML;
+      if(html.indexOf("<!DOCTYPE")===-1)html="<!DOCTYPE html>"+html;
 
-          +'<div style="background:#fff;border:1px solid #34d399;border-radius:8px;padding:10px;margin-bottom:10px">'
-          +'<div style="font-weight:700;color:#14532d;font-size:12px;margin-bottom:6px">📱 Option 1 — Share via WhatsApp (Easiest)</div>'
-          +'<button class="wa-share-btn" onclick="shareCodeWA()" style="font-size:14px;padding:11px">'
-          +'📲 Send Price Code on WhatsApp</button>'
-          +'</div>'
-
-          +'<div style="background:#fff;border:1px solid #34d399;border-radius:8px;padding:10px">'
-          +'<div style="font-weight:700;color:#14532d;font-size:12px;margin-bottom:6px">📋 Option 2 — Copy Code Manually</div>'
-          +'<div class="data-code-box" id="exportCodeBox" onclick="selectExportCode()">'+encoded+'</div>'
-          +'<button onclick="copyExportCode()" style="background:#15803d;color:#fff;border:none;border-radius:7px;padding:10px;font-weight:700;width:100%;cursor:pointer;font-size:13px">📋 Copy Code to Clipboard</button>'
-          +'<div id="copyCodeMsg" style="text-align:center;font-size:12px;color:#166534;margin-top:4px"></div>'
-          +'</div>'
-
-          +'<div style="margin-top:10px;background:#fef9c3;border:1px solid #fbbf24;border-radius:8px;padding:9px;font-size:11px;color:#713f12;line-height:1.7">'
-          +'<b>Team Member Instructions:</b><br>'
-          +'Open app → ⚙️ Settings → Scroll down → <b>Import Price Code</b> → Paste code → Tap Import ✅'
-          +'</div>'
-          +'</div>';
+      // ── Replace DP block with current prices ──
+      var dpS=html.indexOf("//<<DP_START>>");
+      var dpE=html.indexOf("//<<DP_END>>");
+      if(dpS>-1&&dpE>-1){
+        var dpMark="//<<DP_START>>";
+        var newDP=dpMark+"\nconst DP = "+JSON.stringify(prices)+";";
+        html=html.slice(0,dpS)+newDP+html.slice(dpE);
       }
-      // Store encoded for WA share
-      window._exportCode=encoded;
+
+      // ── Replace DC block with current catalog ──
+      var dcS=html.indexOf("//<<DC_START>>");
+      var dcE=html.indexOf("//<<DC_END>>");
+      if(dcS>-1&&dcE>-1){
+        var dcMark="//<<DC_START>>";
+        var newDC=dcMark+"\nconst DC = "+JSON.stringify(catalog)+";";
+        html=html.slice(0,dcS)+newDC+html.slice(dcE);
+      }
+
+      // ── Also inject localStorage seed for pin/margin/usercats ──
+      var tagO='<'+'script id="epsd">';
+      var tagC='<'+'/script>';
+      var uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
+      var sc='(function(){'
+        +'try{'
+        +'localStorage.setItem("ex_pin",'+JSON.stringify(adminPin)+');'
+        +'localStorage.setItem("ex_m",'+JSON.stringify(String(gMargin))+');'
+        +'localStorage.setItem("ex_user_cats",'+JSON.stringify(JSON.stringify(uc))+');'
+        +'}catch(e){}'
+        +'var s=document.getElementById("epsd");'
+        +'if(s&&s.parentNode)s.parentNode.removeChild(s);'
+        +'})();';
+      var seed=tagO+sc+tagC;
+
+      // Remove old seed if present
+      var os=html.indexOf(tagO);
+      if(os>-1){var oe=html.indexOf(tagC,os);if(oe>-1)html=html.slice(0,os)+html.slice(oe+tagC.length);}
+
+      // Inject before </body>
+      var bi=html.lastIndexOf("</body>");
+      if(bi===-1)bi=html.lastIndexOf("</BODY>");
+      if(bi>-1)html=html.slice(0,bi)+seed+html.slice(bi);
+      else html=html+seed;
+
+      // ── Create download ──
+      var blob=new Blob([html],{type:"text/html;charset=utf-8"});
+      var date=new Date();
+      var stamp=date.getFullYear()+""+String(date.getMonth()+1).padStart(2,"0")+""+String(date.getDate()).padStart(2,"0");
+      var fileName="ENTRIX_App_"+stamp+".html";
+
+      if(btn){btn.disabled=false;btn.textContent="📤 Export & Share Prices";}
+
+      // ── Try Web Share (Android native) ──
+      if(navigator.share&&navigator.canShare){
+        var f=new File([blob],fileName,{type:"text/html"});
+        if(navigator.canShare({files:[f]})){
+          navigator.share({title:"ENTRIX Quotation App - Updated Prices",files:[f]})
+            .then(function(){showMsg("exportMsg","✅ Shared!","msg-ok");})
+            .catch(function(e){if(e.name!=="AbortError")showDownloadUI(blob,fileName);});
+          return;
+        }
+      }
+
+      showDownloadUI(blob,fileName);
+
     }catch(err){
-      showMsg("exportMsg","❌ "+err.message,"msg-err");
+      if(btn){btn.disabled=false;btn.textContent="📤 Export & Share Prices";}
+      showMsg("exportMsg","❌ Error: "+err.message,"msg-err");
     }
-    if(btn){btn.disabled=false;btn.textContent="📤 Export & Share Prices";}
-  },150);
+  },200);
+}
+
+function showDownloadUI(blob,fileName){
+  var reader=new FileReader();
+  reader.onload=function(){
+    var dataUrl=reader.result;
+    var msgEl=document.getElementById("exportMsg");
+    if(!msgEl)return;
+
+    // Also store as WhatsApp code fallback
+    var data={p:prices,c:catalog,u:JSON.parse(localStorage.getItem("ex_user_cats")||"[]"),pin:adminPin,m:gMargin};
+    window._exportCode=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+
+    msgEl.innerHTML=''
+      +'<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:10px;padding:14px;margin-top:8px">'
+      +'<div style="font-weight:800;color:#14532d;font-size:15px;margin-bottom:10px">✅ File Ready!</div>'
+
+      // Download link - user TAPS this
+      +'<a href="'+dataUrl+'" download="'+fileName+'"'
+      +' style="display:block;background:linear-gradient(135deg,#1e3a8a,#1e40af);color:#fff;'
+      +'padding:14px;border-radius:9px;text-align:center;font-weight:800;font-size:16px;'
+      +'text-decoration:none;margin-bottom:10px">📥 TAP TO DOWNLOAD FILE</a>'
+
+      +'<div style="text-align:center;font-size:12px;color:#166534;margin-bottom:12px">'
+      +'After download → Files app → Downloads → Share on WhatsApp</div>'
+
+      +'<div style="border-top:1px solid #bbf7d0;padding-top:10px">'
+      +'<div style="font-weight:700;color:#14532d;font-size:12px;margin-bottom:6px">OR — Send Price Code via WhatsApp</div>'
+      +'<button onclick="shareCodeWA()" style="background:linear-gradient(135deg,#25d366,#16a34a);color:#fff;border:none;border-radius:8px;padding:11px;font-weight:800;font-size:14px;width:100%;cursor:pointer">📲 Send Price Code on WhatsApp</button>'
+      +'</div>'
+      +'</div>';
+  };
+  reader.onerror=function(){showMsg("exportMsg","❌ Could not prepare file","msg-err");};
+  reader.readAsDataURL(blob);
 }
 
 function selectExportCode(){
@@ -1685,6 +1765,17 @@ function importPriceCode(){
 
 function renderSettingsTab(){
   document.getElementById("tab-settings").innerHTML=`
+    <!-- INSTALL APP SECTION -->
+    <div style="background:linear-gradient(135deg,#0a1f4e,#1a3a7c);border-radius:12px;padding:16px;margin-bottom:14px">
+      <div style="font-weight:800;color:#e8a020;font-size:15px;margin-bottom:6px">📲 Install as App on Phone</div>
+      <div style="font-size:12px;color:#8eb4ff;margin-bottom:12px;line-height:1.7">
+        Install ENTRIX on your home screen — works offline, opens instantly like a real app!
+      </div>
+      <button onclick="showManualInstallInstructions()" style="background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;border:none;border-radius:9px;padding:13px;font-weight:800;font-size:15px;width:100%;cursor:pointer;font-family:inherit">
+        📲 How to Install on Home Screen
+      </button>
+    </div>
+
     <!-- EXPORT SECTION -->
     <div class="export-section">
       <div class="export-title">📤 Share Updated Prices with Team</div>
@@ -1904,12 +1995,156 @@ function dismissUpdate(){
   if(html) html.setAttribute("data-version", APP_VERSION);
 })();
 
+// ═══ PWA INSTALL ═══
+var deferredPrompt=null;
+var pwaInstalled=localStorage.getItem("pwa_installed")||false;
+
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+  if(!pwaInstalled)showPWABanner();
+});
+
+window.addEventListener("appinstalled",function(){
+  pwaInstalled=true;
+  localStorage.setItem("pwa_installed","1");
+  hidePWABanner();
+  showPWASuccessMsg();
+});
+
+function showPWABanner(){
+  var existing=document.getElementById("pwaBanner");
+  if(existing)return;
+  var banner=document.createElement("div");
+  banner.id="pwaBanner";
+  banner.className="pwa-banner";
+  banner.innerHTML=
+    '<div class="pwa-logo">E</div>'
+    +'<div class="pwa-text">'
+    +'<div class="pwa-title">Install ENTRIX App</div>'
+    +'<div class="pwa-sub">Add to home screen — works offline!</div>'
+    +'</div>'
+    +'<button class="pwa-install-btn" onclick="installPWA()">📲 Install</button>'
+    +'<button class="pwa-dismiss" onclick="hidePWABanner()">✕</button>';
+  document.body.appendChild(banner);
+}
+
+function hidePWABanner(){
+  var b=document.getElementById("pwaBanner");
+  if(b)b.remove();
+}
+
+function installPWA(){
+  if(!deferredPrompt){
+    // Manual instructions if prompt not available
+    showManualInstallInstructions();
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(result){
+    if(result.outcome==="accepted"){
+      pwaInstalled=true;
+      localStorage.setItem("pwa_installed","1");
+      showPWASuccessMsg();
+    }
+    deferredPrompt=null;
+    hidePWABanner();
+  });
+}
+
+function showManualInstallInstructions(){
+  var overlay=document.createElement("div");
+  overlay.id="pwaInstallHelp";
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99998;display:flex;align-items:flex-end;justify-content:center;padding:20px";
+  overlay.innerHTML=''
+    +'<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:400px">'
+    +'<div style="font-weight:800;font-size:17px;color:#0a1f4e;margin-bottom:6px">📲 Install ENTRIX App</div>'
+    +'<div style="font-size:13px;color:#374151;line-height:1.8;margin-bottom:16px">'
+    +'<b>Android Chrome:</b><br>'
+    +'Tap ⋮ (3 dots menu) → <b>Add to Home screen</b> → Tap Add<br><br>'
+    +'<b>iPhone Safari:</b><br>'
+    +'Tap Share button (□↑) → <b>Add to Home Screen</b> → Tap Add'
+    +'</div>'
+    +'<div style="background:#ecfdf5;border-radius:8px;padding:10px;font-size:12px;color:#065f46;margin-bottom:14px">'
+    +'✅ Once installed, the ENTRIX app icon appears on your home screen.'
+    +'<br>It works offline and looks like a real app!'
+    +'</div>'
+    +'<button id="pwaHelpClose" style="background:#0a1f4e;color:#fff;border:none;border-radius:8px;padding:12px;font-weight:700;width:100%;font-size:14px;cursor:pointer">Got it ✓</button>'
+    +'</div>';
+  document.body.appendChild(overlay);
+  var hc=document.getElementById("pwaHelpClose");
+  if(hc)hc.onclick=function(){if(overlay.parentNode)overlay.remove();};
+}
+
+function showPWASuccessMsg(){
+  var overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;background:rgba(10,31,78,.9);z-index:99998;display:flex;align-items:center;justify-content:center;padding:24px";
+  overlay.innerHTML=''
+    +'<div style="background:#fff;border-radius:16px;padding:28px;text-align:center;max-width:320px">'
+    +'<div style="font-size:52px;margin-bottom:10px">🎉</div>'
+    +'<div style="font-weight:900;font-size:18px;color:#0a1f4e;margin-bottom:8px">App Installed!</div>'
+    +'<div style="font-size:13px;color:#374151;margin-bottom:18px;line-height:1.6">'
+    +'ENTRIX is now on your home screen.<br>Open it anytime — works offline too!'
+    +'</div>'
+    +'<button id="pwaSuccessClose" style="background:linear-gradient(135deg,#e8a020,#c47a10);color:#0a1f4e;border:none;border-radius:9px;padding:12px;font-weight:800;width:100%;font-size:15px;cursor:pointer">🚀 Start Using App</button>'
+    +'</div>';
+  document.body.appendChild(overlay);
+  var sc=document.getElementById("pwaSuccessClose");
+  if(sc)sc.onclick=function(){if(overlay.parentNode)overlay.remove();};
+  setTimeout(function(){if(overlay&&overlay.parentNode)overlay.remove();},5000);
+}
+
+// Register Service Worker for offline support
+function registerSW(){
+  if(!("serviceWorker" in navigator))return;
+  var swCode=[
+    'var CACHE="entrix-v2";',
+    'var FILES=["/"];',
+    'self.addEventListener("install",function(e){',
+    '  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}));',
+    '  self.skipWaiting();',
+    '});',
+    'self.addEventListener("activate",function(e){',
+    '  e.waitUntil(caches.keys().then(function(keys){',
+    '    return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));',
+    '  }));',
+    '  self.clients.claim();',
+    '});',
+    'self.addEventListener("fetch",function(e){',
+    '  e.respondWith(caches.match(e.request).then(function(r){',
+    '    return r||fetch(e.request).then(function(res){',
+    '      var rc=res.clone();',
+    '      caches.open(CACHE).then(function(c){c.put(e.request,rc);});',
+    '      return res;',
+    '    }).catch(function(){return caches.match("/");});',
+    '  }));',
+    '});'
+  ].join('');
+  var blob=new Blob([swCode],{type:"application/javascript"});
+  var swUrl=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(function(){});
+}
+
+// Show install button in settings
+function showInstallInSettings(){
+  showManualInstallInstructions();
+}
+
 // ═══ INIT ═══
 // Load user-added categories AFTER prices is initialized
 (function loadUserCats(){
   const uc=JSON.parse(localStorage.getItem("ex_user_cats")||"[]");
   uc.forEach(c=>{CAT_CLR[c.key]=c.color;CAT_ICO[c.key]=c.icon;CAT_LBL[c.key]=c.label;if(!prices[c.key])prices[c.key]=[];});
 })();
+registerSW();
+// Show install banner after 3 seconds if not yet installed
+if(!localStorage.getItem("pwa_installed")){
+  setTimeout(function(){
+    if(!deferredPrompt&&!localStorage.getItem("pwa_installed")){
+      // Show manual instructions hint in header
+    }
+  },3000);
+}
 checkVersion();
 pickRole("admin");
 </script>
