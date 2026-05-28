@@ -1,2 +1,0 @@
-# Entrix---App
-index.html
